@@ -17,7 +17,7 @@
     <!--Google Webfont-->
 		<link href='https://fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,300italic,400italic,500,500italic,600,600italic,700' rel='stylesheet' type='text/css'>
     <!--Favicon-->
-    <link rel="shortcut icon" type="image/png" href="images/fav.png"/>
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename = 'images/fav.png') }}"/>
 	</head>
 	<body>
 
@@ -35,7 +35,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-              <a class="navbar-brand" href="index.html"><img src="images/logo_new.png" alt="logo" height="30px"/></a>
+              <a class="navbar-brand" href="index.html"><img src="{{ url_for('static', filename = 'images/logo_new.png') }}" alt="logo" height="30px"/></a>
               
               
           </div>
@@ -62,7 +62,7 @@
         <div class="sign-up-form">
                     
                     
-					<a href="index.html" class="logo"><img src="images/logo4.png" alt="Friend Finder" height="130px"/></a>
+					<a href="index.html" class="logo"><img src="{{ url_for('static', filename = 'images/logo4.png') }}" alt="Friend Finder" height="130px"/></a>
                     <br><br><br>
 					<div class="line-divider"></div>
 					<div class="form-wrapper">
@@ -82,7 +82,7 @@
                     <br>
                     <br>
                     <br>
-                    <a><img src="images/operalogo.png" alt="logo" height="40px"/></a>
+                    <a><img src="{{ url_for('static', filename = 'images/operalogo.png') }}" alt="logo" height="40px"/></a>
 					<img class="form-shadow" src="images/bottom-shadow.png" alt="" />
                     
 				</div><!-- Sign Up Form End -->
@@ -98,7 +98,7 @@
 		<footer id="footer">
     
       <div class="copyright">
-        <p>copyright @YAST Opera Solutions 2018. All rights reserved</p>
+        <p>Copyright @YAST Opera Solutions 2018. All rights reserved</p>
       </div>
 		</footer>
 
