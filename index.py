@@ -11,11 +11,11 @@ db = dbConnect(app)
 @app.route("/signup")    
 def signUp():
     if request.method == 'POST':
-        conn, cursor = db.connect()
-        
+        conn, cursor = db.connect()        
     else:
         return render_template('signup.html')    
 
+     
 
 @app.route("/",methods=['POST','GET'])
 def main():
