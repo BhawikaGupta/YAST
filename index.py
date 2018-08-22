@@ -20,6 +20,7 @@ def signUp():
         userName = request.form['nameUser']
         userEmail = request.form['emailUser']
         userPassword = request.form['passwordUser']
+        dept = "Volunteer"
         sql = "select * from users where USERNAME='%s'" % (userEmail)
         cursor.execute(sql)
         rows = cursor.fetchone()
@@ -28,7 +29,7 @@ def signUp():
             return json.dumps({'message':'User Already Exists. Please login'}) 
         else:
             encrypted_password = sha256_crypt.encrypt(userPassword)
-            sql = "insert into users(USERNAME, NAME, PASSWORD, DEPARTMENT) values('%s','%s','%s', %s)" % (userEmail, userName, encrypted_password, 'Volunteer')
+            sql = "insert into users(USERNAME, NAME, PASSWORD, DEPARTMENT) values('%s','%s','%s', %s)" % (userEmail, userName, encrypted_password, dept)
             cursor.execute(sql)
             conn.commit()
             return json.dumps({'message':'success'}) 
