@@ -128,6 +128,7 @@
                 var obj = jQuery.parseJSON(response);
                 if(obj.message == "success"){
                     bootbox.alert("Login Successful");
+                    window.location.href = "/cuDashboard";
                     }
                 else
                 {

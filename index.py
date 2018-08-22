@@ -9,6 +9,10 @@ from passlib.hash import sha256_crypt
 app = Flask(__name__)
 db = dbConnect(app)
 
+@app.route("/cuDashboard")    
+def cuDashboard():
+    return render_template('cuDashboard.html') 
+
 @app.route("/signup",methods=['POST','GET'])    
 def signUp():
     if request.method == 'POST':
