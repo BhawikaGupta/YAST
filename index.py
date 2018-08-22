@@ -21,7 +21,12 @@ def main():
 
 @app.route("/signup")    
 def signUp():
-    return render_template('signup.html')    
+    return render_template('signup.html') 
+
+@app.route("/cuDashboard")    
+def cuDashboard():
+    return render_template('cuDashboard.html') 
+    
 
 if __name__ == "__main__":
     app.run()    
