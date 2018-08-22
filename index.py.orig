@@ -10,12 +10,20 @@ db = dbConnect(app)
 
 @app.route("/signup")    
 def signUp():
+<<<<<<< HEAD
+    return render_template('signup.html') 
+
+@app.route("/cuDashboard")    
+def cuDashboard():
+    return render_template('cuDashboard.html') 
+    
+=======
     if request.method == 'POST':
         conn, cursor = db.connect()
         
     else:
         return render_template('signup.html')    
-
+>>>>>>> 094af240fc0a7c62aca7ba6d09e4cfee96bc134e
 
 @app.route("/",methods=['POST','GET'])
 def main():
