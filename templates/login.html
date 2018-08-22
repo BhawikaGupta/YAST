@@ -67,16 +67,16 @@
 					<div class="line-divider"></div>
 					<div class="form-wrapper">
 						<p class="signup-text">Login</p>
-						<form action="#">
+						<form id="loginForm" action="/" method="post" role="form">
 							<fieldset class="form-group">
-								<input type="email" class="form-control" id="example-email" placeholder="Enter email">
+								<input name = "userEmail" type="email" class="form-control" id="example-email" placeholder="Enter email" required>
 							</fieldset>
 							<fieldset class="form-group">
-								<input type="password" class="form-control" id="example-password" placeholder="Enter a password">
+								<input name = "userPassword" type="password" class="form-control" id="example-password" placeholder="Enter a password" required>
 							</fieldset>
 						</form>
 						
-						<button class="btn-secondary">Login</button>
+						<button id="btnLogin" class="btn-secondary" type="button">Login</button>
 					</div>
 					<a href="signup">Don't have an account?</a>
                     <br>
@@ -109,11 +109,38 @@
 
     <!-- Scripts
     ================================================= -->
+    <script src="{{ url_for('static', filename = 'js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/jquery.appear.min.js') }}"></script>
 	<script src="{{ url_for('static', filename = 'js/jquery.incremental-counter.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/script.js') }}"></script>
+    <script>
+    $(function(){
+	$('#btnLogin').click(function(){
+		$.ajax({
+			url: "/",
+			data: $('form').serialize(),
+			type: "POST",
+			success: function(response){
+                var obj = jQuery.parseJSON(response);
+                if(obj.message == "success"){
+                    console.log("You did it");
+                    }
+                else
+                {
+                    alert(obj.message);
+                }
+			},
+			error: function(error) {
+                alert("Server is not responding. Try again later!");
+            }
+		});
+	});
+});
+    </script>
     
 	</body>
 </html>
+
