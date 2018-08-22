@@ -29,7 +29,7 @@ def signUp():
             return json.dumps({'message':'User Already Exists. Please login'}) 
         else:
             encrypted_password = sha256_crypt.encrypt(userPassword)
-            sql = "insert into users(USERNAME, NAME, PASSWORD, DEPARTMENT) values('%s','%s','%s', %s)" % (userEmail, userName, encrypted_password, dept)
+            sql = "insert into users(USERNAME, NAME, PASSWORD, DEPARTMENT) values('%s','%s','%s', '%s')" % (userEmail, userName, encrypted_password, dept)
             cursor.execute(sql)
             conn.commit()
             return json.dumps({'message':'success'}) 
