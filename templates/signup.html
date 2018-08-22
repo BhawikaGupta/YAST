@@ -43,22 +43,22 @@
 					<div class="line-divider"></div>
 					<div class="form-wrapper">
 						<p class="signup-text">SignUp</p>
-						<form action="#">
+						<form id="signUpForm" action="/signup" method="post" role="form">
                             <fieldset class="form-group">
-								<input type="text" class="form-control" id="example-first-name" placeholder="Enter name">
+								<input type="text" class="form-control" name="nameUser" id="example-name" placeholder="Enter name">
 							</fieldset>
 							<fieldset class="form-group">
-								<input type="email" class="form-control" id="example-email" placeholder="Enter email">
+								<input type="email" class="form-control" name="emailUser" id="example-email" placeholder="Enter email">
 							</fieldset>
 							<fieldset class="form-group">
-								<input type="password" class="form-control" id="example-password" placeholder="Enter a password">
+								<input type="password" class="form-control" name="passwordUser" id="example-password" placeholder="Enter a password">
 							</fieldset>
 							<fieldset class="form-group">
-								<input type="password" class="form-control" id="example-password" placeholder="Confirm password">
+								<input type="password" class="form-control" name="passwordConfirm" id="example-passConf" placeholder="Confirm password">
 							</fieldset>                            
 						</form>
 						
-						<button class="btn-secondary">SignIn</button>
+						<button class="btn-secondary" id="signButton" type="button">SignIn</button>
 					</div>
 
                     <br>
@@ -89,11 +89,48 @@
 
     <!-- Scripts
     ================================================= -->
+    <script src="{{ url_for('static', filename = 'js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/jquery.appear.min.js') }}"></script>
 	<script src="{{ url_for('static', filename = 'js/jquery.incremental-counter.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/script.js') }}"></script>
-    
+    <script src="{{ url_for('static', filename = 'js/bootbox.min.js') }}"></script>
+    <script>
+    $(function(){
+	$('#signButton').click(function(){
+        var password1 = document.getElementById("example-password").value;
+        var password2 = document.getElementById("example-passConf").value;
+        if(password1!=password2)
+        {
+            bootbox.alert("Password and Confirm Password don't match");
+        }
+        else
+        {
+            $.ajax({
+                url: "/signup",
+                data: $('form').serialize(),
+                type: "POST",
+                success: function(response){
+                    var obj = jQuery.parseJSON(response);
+                    console.log(obj);
+                    if(obj.message == "success"){
+                        bootbox.alert("User created successfully. Please login into your account");
+                        window.location.href = "/";
+                        }
+                    else
+                    {
+                        bootbox.alert(obj.message);
+                    }
+                },
+                error: function(error) {
+                    bootbox.alert("Server is not responding. Try again later!");
+                }
+            });
+        }
+	});
+});
+    </script>
 	</body>
 </html>

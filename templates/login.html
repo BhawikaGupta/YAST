@@ -116,6 +116,7 @@
     <script src="{{ url_for('static', filename = 'js/jquery.appear.min.js') }}"></script>
 	<script src="{{ url_for('static', filename = 'js/jquery.incremental-counter.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/bootbox.min.js') }}"></script>
     <script>
     $(function(){
 	$('#btnLogin').click(function(){
@@ -126,15 +127,16 @@
 			success: function(response){
                 var obj = jQuery.parseJSON(response);
                 if(obj.message == "success"){
-                    console.log("You did it");
+                    bootbox.alert("Login Successful");
+                    window.location.href = "/cuDashboard";
                     }
                 else
                 {
-                    alert(obj.message);
+                    bootbox.alert(obj.message);
                 }
 			},
 			error: function(error) {
-                alert("Server is not responding. Try again later!");
+                bootbox.alert("Server is not responding. Try again later!");
             }
 		});
 	});

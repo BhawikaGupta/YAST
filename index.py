@@ -4,18 +4,38 @@ from werkzeug import generate_password_hash, check_password_hash
 import sys
 sys.path.append('config/')
 from dbConnect import dbConnect
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 db = dbConnect(app)
 
-@app.route("/signup")    
+@app.route("/cuDashboard")    
+def cuDashboard():
+    return render_template('cuDashboard.html') 
+
+@app.route("/signup",methods=['POST','GET'])    
 def signUp():
     if request.method == 'POST':
-        conn, cursor = db.connect()        
+        conn, cursor = db.connect()
+        userName = request.form['nameUser']
+        userEmail = request.form['emailUser']
+        userPassword = request.form['passwordUser']
+        sql = "select * from users where USERNAME='%s'" % (userEmail)
+        cursor.execute(sql)
+        rows = cursor.fetchone()
+        conn.commit()
+        if(rows):
+            return json.dumps({'message':'User Already Exists. Please login'}) 
+        else:
+            encrypted_password = sha256_crypt.encrypt(userPassword)
+            sql = "insert into users(USERNAME, NAME, PASSWORD) values('%s','%s','%s')" % (userEmail, userName, encrypted_password)
+            cursor.execute(sql)
+            conn.commit()
+            return json.dumps({'message':'success'}) 
+        db.disconnect(conn, cursor)
     else:
         return render_template('signup.html')    
 
-     
 
 @app.route("/",methods=['POST','GET'])
 def main():
@@ -29,9 +49,7 @@ def main():
         conn.commit()
         db.disconnect(conn, cursor)
         if(rows):
-            print rows[0]
-            print userPassword
-            if(rows[0] == userPassword):
+            if(sha256_crypt.verify(userPassword, rows[0])):
                 return json.dumps({'message':'success'}) 
             else:
                 return json.dumps({'message':'Enter correct password'})   
