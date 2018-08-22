@@ -120,25 +120,38 @@
     <script>
     $(function(){
 	$('#btnLogin').click(function(){
-		$.ajax({
-			url: "/",
-			data: $('form').serialize(),
-			type: "POST",
-			success: function(response){
-                var obj = jQuery.parseJSON(response);
-                if(obj.message == "success"){
-                    bootbox.alert("Login Successful");
-                    window.location.href = "/cuDashboard";
+        var email = document.getElementById("example-email").value;
+        var password = document.getElementById("example-password").value;
+        if(email.trim()=='')
+        {
+           bootbox.alert("Please enter Email");
+        }
+        else if(password.trim()=='')
+        {
+           bootbox.alert("Please enter Password");
+        }
+        else
+        {
+            $.ajax({
+                url: "/",
+                data: $('form').serialize(),
+                type: "POST",
+                success: function(response){
+                    var obj = jQuery.parseJSON(response);
+                    if(obj.message == "success"){
+                        bootbox.alert("Login Successful");
+                        window.location.href = "/cuDashboard";
+                        }
+                    else
+                    {
+                        bootbox.alert(obj.message);
                     }
-                else
-                {
-                    bootbox.alert(obj.message);
+                },
+                error: function(error) {
+                    bootbox.alert("Server is not responding. Try again later!");
                 }
-			},
-			error: function(error) {
-                bootbox.alert("Server is not responding. Try again later!");
-            }
-		});
+            });
+        }
 	});
 });
     </script>
