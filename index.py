@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, json
+from flask import Flask, render_template, request, json, session
+from collections import OrderedDict
 from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 import sys
@@ -7,11 +8,43 @@ from dbConnect import dbConnect
 from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
+app.secret_key = "zahra"
 db = dbConnect(app)
+
 
 @app.route("/cuDashboard")    
 def cuDashboard():
-    return render_template('cuDashboard.html') 
+    login_info = session.get('username', "guest")
+    print login_info[1]
+    conn, cursor = db.connect()
+    user = OrderedDict() 
+    user["useremail"]=login_info[0],
+    user["username"]=login_info[1].encode("utf-8"),
+    user["contact"]="",
+    user["blood"]="",
+    user["gender"]="",
+    user["age"]="",
+    user["location"]="",
+    user["donate"]=""
+
+    sql = "select * from users_profile where USEREMAIL='%s'" % (login_info[0])
+    cursor.execute(sql)
+    rows = cursor.fetchone()
+    print rows
+    conn.commit()
+    db.disconnect(conn, cursor)
+    if(rows):
+        count = 0 
+        for key in user:
+            if key == "username":
+                continue
+            else:
+                user[key] = rows[count].encode("utf-8")
+                count = count +1
+    user["username"]=user["username"][0]
+    user_data = dict(user)
+    
+    return render_template('cuDashboard.html',data=user_data) 
 
 @app.route("/signup",methods=['POST','GET'])    
 def signUp():
@@ -44,13 +77,15 @@ def main():
         conn, cursor = db.connect()
         userEmail = request.form['userEmail']
         userPassword = request.form['userPassword']
-        sql = "select PASSWORD from users where USERNAME='%s'" % (userEmail)
+        sql = "select USERNAME,NAME,PASSWORD from users where USERNAME='%s'" % (userEmail)
         cursor.execute(sql)
         rows = cursor.fetchone()
+        print rows
         conn.commit()
         db.disconnect(conn, cursor)
         if(rows):
-            if(sha256_crypt.verify(userPassword, rows[0])):
+            if(sha256_crypt.verify(userPassword, rows[2])):
+                session['username'] = [rows[0],rows[1]]
                 return json.dumps({'message':'success'}) 
             else:
                 return json.dumps({'message':'Enter correct password'})   
