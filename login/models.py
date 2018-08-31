@@ -47,8 +47,8 @@ def create_otp(user = None, purpose = None):
     otp = randint(1000, 9999)
     otp_object = userOTP(user = user, purpose = purpose, otp = otp)
     otp_object.save()
-    otp_object_name = users.objects.get(USERNAME = user)
-    return otp_object.id , otp, otp_object_name.NAME
+    otp_object_user = users.objects.get(USERNAME = user)
+    return otp_object.id , otp, otp_object_user.NAME
 
 def get_valid_otp_object(user = None, otp= None, purpose = None):
     if not user:
