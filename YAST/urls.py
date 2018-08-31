@@ -23,6 +23,6 @@ urlpatterns = [
     url(r'^signup/', signup, name = 'signup'),
     url(r'^cuDashboard/', cuDashboard, name = 'cuDashboard'),
     url(r'^resetUser/', resetUser, name = 'resetUser'),
-    url(r'^accounts/reset/(.*)/(\d{4})/$', reset_password, name="reset_password"), 
+    url(r'^accounts/reset/(\d+)/(\d{4})/$', reset_password, name="reset_password"), 
     url(r'^', homePage, name = ''),
 ]

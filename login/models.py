@@ -27,7 +27,7 @@ class users(models.Model):
     
 class userOTP(models.Model):
     OTP_PURPOSE_CHOICES = (('FP', 'Forgot Password'),('AA', 'Activate Account'));
-    user = models.ForeignKey(users)
+    user = models.CharField(max_length = 100)
     otp = models.CharField(max_length = 4)
     purpose = models.CharField(max_length = 2, choices = OTP_PURPOSE_CHOICES)
     created_on = models.DateTimeField(auto_now_add = True)
@@ -45,8 +45,10 @@ def create_otp(user = None, purpose = None):
         old_otp = userOTP.objects.get(user = user, purpose = purpose)
         old_otp.delete()
     otp = randint(1000, 9999)
-    otp_object = userOTP.objects.create(user = user, purpose = purpose, otp = otp)
-    return otp
+    otp_object = userOTP(user = user, purpose = purpose, otp = otp)
+    otp_object.save()
+    otp_object_user = users.objects.get(USERNAME = user)
+    return otp_object.id , otp, otp_object_user.NAME
 
 def get_valid_otp_object(user = None, otp= None, purpose = None):
     if not user:
@@ -63,17 +65,26 @@ def get_valid_otp_object(user = None, otp= None, purpose = None):
         return None
     
 def verifyLogin(userEmail):
-    login_object = users.objects.get(USERNAME=userEmail)
+    try:
+        login_object = users.objects.get(USERNAME=userEmail)
+    except users.DoesNotExist:
+        login_object = None
     return login_object
 
 def checkUser(userName):
-    login_object = users.objects.get(USERNAME=userName)
+    try:
+        login_object = users.objects.get(USERNAME=userName)
+    except users.DoesNotExist:
+        login_object = None
     return login_object
     
 def signUpUser(userEmail, userName, encrypted_password, dept):
-    users = users(USERNAME=userEmail, NAME=userName, PASSWORD=encrypted_password, DEPARTMENT=dept)
-    cursor.close()
+    userAccount = users(USERNAME=userEmail, NAME=userName, PASSWORD=encrypted_password, DEPARTMENT=dept)
+    userAccount.save()
     
 def GetUserDetails(userEmail):
-    user_object = users_profile.objects.get(USEREMAIL=userEmail)
+    try:
+        user_object = users_profile.objects.get(USEREMAIL=userEmail)
+    except users_profile.DoesNotExist:
+        user_object = None
     return user_object

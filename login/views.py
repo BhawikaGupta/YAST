@@ -9,7 +9,9 @@ from django.template import RequestContext
 from collections import OrderedDict
 from django.core.mail import send_mail
 from datetime import datetime
-from django.core.mail import EmailMessage
+#from django.core.mail import EmailMessage
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 def homePage(request):
     return render(request, 'homePage.html', {})
@@ -35,29 +37,26 @@ def resetUser(request):
         userEmail = request.POST['userEmailConfirm']
         rows = checkUser(userEmail)
         if(rows):
-            otp = create_otp(user = userEmail, purpose = 'FP')
-            link='http://127.0.0.1:8000/accounts/reset/%s/%s' % (userEmail,otp)
-            print link
-            email = EmailMessage('Subject', 'Body', to=[userEmail])
-            email.send()
-            #return render(request, 'accounts/auth/reset.html', {'u': user,'shop_list' : Shops.objects.all()})
+            id, otp, userName = create_otp(user = userEmail, purpose = 'FP')
+            link='http://127.0.0.1:8000/accounts/reset/%s/%s/' % (id,otp)
+            msg_html = render_to_string('passwordRestMailTemplate.html', { 'username': userName, 'link':link})
+            send_mail('Password Reset Request',"Hi",None,[userEmail],html_message=msg_html)
             return HttpResponse(str(json.dumps({'message':'Password reset Email has been sent to your link. Please reset and login!'})))
         else:
             return HttpResponse(str(json.dumps({'message':'Entered username is not registered! Please Signup!'})))
         
 
 def cuDashboard(request):
-    login_info = request.session.get('username', "guest")
-    print login_info[1]
+    login_info = request.session.get('username', 'guest')
     user = OrderedDict() 
-    user["useremail"]=login_info[0],
+    user["useremail"]=login_info[0].encode("utf-8"),
     user["username"]=login_info[1].encode("utf-8"),
-    user["contact"]="",
-    user["blood"]="",
-    user["gender"]="",
-    user["age"]="",
-    user["location"]="",
-    user["donate"]=""
+    user["contact"]="".encode("utf-8"),
+    user["blood"]="".encode("utf-8"),
+    user["gender"]="".encode("utf-8"),
+    user["age"]="".encode("utf-8"),
+    user["location"]="".encode("utf-8"),
+    user["donate"]="".encode("utf-8")
     rows = GetUserDetails(login_info[0])
     if(rows):
         count = 0 
@@ -68,10 +67,6 @@ def cuDashboard(request):
                 user[key] = rows[count].encode("utf-8")
                 count = count +1
     user["username"]=user["username"][0]
-    #user_data = dict(user)
-    #print user_data
-    #print type(user_data)
-    #return HttpResponse('cuDashboard.html',user_data) 
     print user
     return render(request, 'cuDashboard.html', {"data":user})
 
@@ -83,8 +78,8 @@ def login(request):
         userPassword = request.POST['userPassword']
         rows = verifyLogin(userEmail)
         if(rows):
-            if(sha256_crypt.verify(userPassword, rows[2])):
-                request.session['username'] = [rows[0],rows[1]]
+            if(sha256_crypt.verify(userPassword, rows.PASSWORD)):
+                request.session['username'] = [rows.USERNAME,rows.NAME]
                 return  HttpResponse(str(json.dumps({'message':'success'}) ))
             else:
                 return HttpResponse(str(json.dumps({'message':'Enter correct password'})))
