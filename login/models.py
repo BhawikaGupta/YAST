@@ -77,8 +77,7 @@ def checkUser(userName):
     return login_object
     
 def signUpUser(userEmail, userName, encrypted_password, dept):
-    users = users(USERNAME=userEmail, NAME=userName, PASSWORD=encrypted_password, DEPARTMENT=dept)
-    cursor.close()
+    userprofile = users_profile(USERNAME=userEmail, NAME=userName, PASSWORD=encrypted_password, DEPARTMENT=dept)
     
 def GetUserDetails(userEmail):
     try:
