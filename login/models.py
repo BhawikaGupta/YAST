@@ -65,14 +65,14 @@ def get_valid_otp_object(user = None, otp= None, purpose = None):
 def verifyLogin(userEmail):
     try:
         login_object = users.objects.get(USERNAME=userEmail)
-    except login_object.DoesNotExist:
+    except users.DoesNotExist:
         login_object = None
     return login_object
 
 def checkUser(userName):
     try:
         login_object = users.objects.get(USERNAME=userName)
-    except login_object.DoesNotExist:
+    except users.DoesNotExist:
         login_object = None
     return login_object
     
@@ -83,6 +83,6 @@ def signUpUser(userEmail, userName, encrypted_password, dept):
 def GetUserDetails(userEmail):
     try:
         user_object = users_profile.objects.get(USEREMAIL=userEmail)
-    except user_object.DoesNotExist:
+    except users_profile.DoesNotExist:
         user_object = None
     return user_object
