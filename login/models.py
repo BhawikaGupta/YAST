@@ -27,7 +27,7 @@ class users(models.Model):
     
 class userOTP(models.Model):
     OTP_PURPOSE_CHOICES = (('FP', 'Forgot Password'),('AA', 'Activate Account'));
-    user = models.ForeignKey(users)
+    user = models.CharField(max_length = 100)
     otp = models.CharField(max_length = 4)
     purpose = models.CharField(max_length = 2, choices = OTP_PURPOSE_CHOICES)
     created_on = models.DateTimeField(auto_now_add = True)
@@ -45,8 +45,10 @@ def create_otp(user = None, purpose = None):
         old_otp = userOTP.objects.get(user = user, purpose = purpose)
         old_otp.delete()
     otp = randint(1000, 9999)
-    otp_object = userOTP.objects.create(user = user, purpose = purpose, otp = otp)
-    return otp
+    otp_object = userOTP(user = user, purpose = purpose, otp = otp)
+    otp_object.save()
+    otp_object_name = users.objects.get(USERNAME = user)
+    return otp_object.id , otp, otp_object_name.NAME
 
 def get_valid_otp_object(user = None, otp= None, purpose = None):
     if not user:
