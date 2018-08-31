@@ -47,17 +47,17 @@ def resetUser(request):
         
 
 def cuDashboard(request):
-    login_info = request.session.get('username', "guest")
+    login_info = request.session.get('username', 'guest')
     print login_info[1]
     user = OrderedDict() 
-    user["useremail"]=login_info[0],
+    user["useremail"]=login_info[0].encode("utf-8"),
     user["username"]=login_info[1].encode("utf-8"),
-    user["contact"]="",
-    user["blood"]="",
-    user["gender"]="",
-    user["age"]="",
-    user["location"]="",
-    user["donate"]=""
+    user["contact"]="".encode("utf-8"),
+    user["blood"]="".encode("utf-8"),
+    user["gender"]="".encode("utf-8"),
+    user["age"]="".encode("utf-8"),
+    user["location"]="".encode("utf-8"),
+    user["donate"]="".encode("utf-8")
     rows = GetUserDetails(login_info[0])
     if(rows):
         count = 0 
@@ -83,8 +83,8 @@ def login(request):
         userPassword = request.POST['userPassword']
         rows = verifyLogin(userEmail)
         if(rows):
-            if(sha256_crypt.verify(userPassword, rows[2])):
-                request.session['username'] = [rows[0],rows[1]]
+            if(sha256_crypt.verify(userPassword, rows.PASSWORD)):
+                request.session['username'] = [rows.USERNAME,rows.NAME]
                 return  HttpResponse(str(json.dumps({'message':'success'}) ))
             else:
                 return HttpResponse(str(json.dumps({'message':'Enter correct password'})))
