@@ -48,7 +48,6 @@ def resetUser(request):
 
 def cuDashboard(request):
     login_info = request.session.get('username', 'guest')
-    print login_info[1]
     user = OrderedDict() 
     user["useremail"]=login_info[0].encode("utf-8"),
     user["username"]=login_info[1].encode("utf-8"),
@@ -68,10 +67,6 @@ def cuDashboard(request):
                 user[key] = rows[count].encode("utf-8")
                 count = count +1
     user["username"]=user["username"][0]
-    #user_data = dict(user)
-    #print user_data
-    #print type(user_data)
-    #return HttpResponse('cuDashboard.html',user_data) 
     print user
     return render(request, 'cuDashboard.html', {"data":user})
 
