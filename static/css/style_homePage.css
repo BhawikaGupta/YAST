@@ -1,57 +1,48 @@
 @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
  
-body{
-	margin: 0;
-	padding: 0;
-	background: #000;
+body {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(50%,rgba(0,0,0,0.65))), url(notebook.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    positon:
+
 }
  
-.body{
-	position: absolute;
-	top: -20px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-	background-image: url(notebook.jpg);
-	background-size: cover;
-	z-index: 0;
-    opacity: 0.5;
-}
-
-.grad{
-	position: absolute;
-	top: -20px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
-	z-index: 1;
-	opacity: 0.7;
-}
-
-
 .header{
-	position: absolute;
-	top: calc(50% - 125px);
-	left: calc(50% - 600px);
-    right: calc(70% - 200px);
-	z-index: 2;
+    margin-top:20%;
+    position:fixed;
+    
 }
 
 .header div{
 	float: left;
 	color: #fff;
 	font-family: 'Exo', sans-serif;
-	font-size: 35px;
+	font-size: 30px;
 	font-weight: 200;
 }
 
 .header div span{
 	color: #00CED1 !important;
     font-weight: bold; 
+}
+
+.heart-rate {
+  width: 300px;
+  height: 73px;
+}
+
+.btn,
+.btn:hover,
+.btn:active,
+.btn:visited,
+.btn:focus {
+    background-color: #00CED1 !important;
+    color: white;
 }
