@@ -50,20 +50,20 @@ def create_otp(user = None, purpose = None):
     otp_object_user = users.objects.get(USERNAME = user)
     return otp_object.id , otp, otp_object_user.NAME
 
-def get_valid_otp_object(user = None, otp= None, purpose = None):
-    if not user:
-        raise ValueError("Invalid Arguments");
-    choices = []
-    for choice_purpose, verbose in userOTP.OTP_PURPOSE_CHOICES:
-        choices.append(choice_purpose)
-    if not purpose in choices:
-        raise ValueError('Invalid Arguments');
+def get_valid_otp_object(id= None, otp = None):
     try:
-        otp_object = userOTP.objects.get(user = user, purpose=purpose, otp=otp)
-        return otp_object
+        otp_object = userOTP.objects.get(id=id, otp=otp)
+        obj = users.objects.get(USERNAME=otp_object.user)
+        return otp_object, obj
     except userOTP.DoesNotExist:
-        return None
-    
+        return None, None
+
+def set_password_otp(otp_object, encrypted_password):
+    emailAddress = otp_object.USERNAME
+    obj = users.objects.get(USERNAME=emailAddress)
+    obj.PASSWORD = encrypted_password
+    obj.save()
+  
 def verifyLogin(userEmail):
     try:
         login_object = users.objects.get(USERNAME=userEmail)
