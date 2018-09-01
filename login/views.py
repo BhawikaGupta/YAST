@@ -13,6 +13,9 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import resolve
+import datetime
+from django.utils import timezone
+
    
 
 def homePage(request):
@@ -23,7 +26,12 @@ def reset_password(request, id, otp):
     if request.method == 'GET':
         rows, time_model = get_valid_otp_object(id, otp)
         if(rows):
-            return render(request, 'resetPassword.html', {})
+            timeZoneDiff = timezone.now() - rows.created_on
+            if(timeZoneDiff.total_seconds() > 1800):
+                user["message"] = "Your link has expired"
+                return render(request, 'errorPage.html', {"data":user})
+            else:
+                return render(request, 'resetPassword.html', {})
         else:
             user["message"] = "You entered an Invalid Link"
             return render(request, 'errorPage.html', {"data":user})
