@@ -20,6 +20,12 @@ from django.utils import timezone
 
 def homePage(request):
     return render(request, 'homePage.html', {})
+    
+def cuNeedBlood(request):
+    return render(request, 'cuNeedBlood.html', {})    
+    
+def cuVolunteer(request):
+    return render(request, 'cuVolunteer.html', {})      
 
 def reset_password(request, id, otp):
     user = {}
