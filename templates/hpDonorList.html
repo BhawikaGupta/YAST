@@ -1,0 +1,473 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  
+    
+  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	  
+    <title>YAST | DASHBOARD</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static "vendors/bootstrap/dist/css/bootstrap.min.css" %}"  rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="{% static "vendors/font-awesome/css/font-awesome.min.css" %}"  rel="stylesheet" />
+    <!-- NProgress -->
+    <link href="{% static "vendors/nprogress/nprogress.css" %}"  rel="stylesheet" />
+    <!-- iCheck -->
+    <link href="{% static "vendors/iCheck/skins/flat/green.css" %}"  rel="stylesheet" />
+    <!-- bootstrap-wysiwyg -->
+    <link href="{% static "vendors/google-code-prettify/bin/prettify.min.css" %}"  rel="stylesheet" />
+    <!-- Select2 -->
+    <link href="{% static "vendors/select2/dist/css/select2.min.css" %}"  rel="stylesheet" />
+    <!-- Switchery -->
+    <link href="{% static "vendors/switchery/dist/switchery.min.css" %}"  rel="stylesheet" />
+    <!-- starrr -->
+    <link href="{% static "vendors/starrr/dist/starrr.css" %}"  rel="stylesheet" />
+    <!-- bootstrap-daterangepicker -->
+    <link href="{% static "vendors/bootstrap-daterangepicker/daterangepicker.css" %}"  rel="stylesheet" />
+    <!-- Custom Theme Style -->
+    <link href="{% static "build/css/custom.min.css" %}"  rel="stylesheet" />
+
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title text-center" style="border: 0; background:#006dcc;">
+                
+              <a href="index.html" class="site_title"><img class="text-center" style="height:25px; width:25px;" src="{% static "images/logo_small.png" %}"  />&nbsp;<span class="text-center">YAST</span></a>
+            </div>
+
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="text-center">
+                <h5 style="color:white;">Welcome, <b>{{data.username}}</b></h5> 
+                <hr color="white" width="80%">
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu" style="font-size:13px;">
+                  <li><a><i class="fa fa-edit"></i> Dashboard</a>
+                  </li>
+                  <hr color="white" width="80%">
+                  <li><a><i class="fa fa-desktop"></i>Potential Donors</a>
+                  </li>
+                  <hr color="white" width="80%">
+                  <li><a><i class="fa fa-table"></i>Blood Bank Monitor  </a>
+                  </li>
+                  <li><a><i class="fa fa-edit"></i>Network Graphs</a>
+                  </li>
+                  <hr color="white" width="80%">
+                  <li><a><i class="fa fa-desktop"></i>Reward</a>
+                  </li>
+                  <hr color="white" width="80%">
+                  <li><a><i class="fa fa-table"></i>Emergency Notifications</a>
+                  </li>
+
+                </ul>
+              </div>
+              </div>
+
+
+            </div>
+            <!-- /sidebar menu -->
+
+
+            <!-- /menu footer buttons -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="images/img.jpg" alt="">{{data.username}}
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="../login"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+
+                <li role="presentation" class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green">6</span>
+                  </a>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>{{data}}</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Volunteer required in New Jersey...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="text-center">
+                        <a>
+                          <strong>See All Alerts</strong>
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Potential Donors</h3>
+              </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Likelihood Donation Score & Rank </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+
+                  <div class="x_content">
+
+                    <div class="table-responsive">
+                      <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                          <tr class="headings">
+                            <th class="column-title">Donor ID </th>
+                            <th class="column-title">Gender </th>                           
+                            <th class="column-title">Blood Group </th>
+                            <th class="column-title">City </th>                             
+                            <th class="column-title">Score </th>
+                            <th class="column-title">Rank </th>
+                            <th class="column-title">Status </th>
+                            <th class="column-title">Reach Out </th>
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr class="even pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000210</td>
+                            <td class=" ">May 23, 2014 11:47:56 PM </td>
+                            <td class=" ">121000210 <i class="success fa fa-long-arrow-up"></i></td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$7.45</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000039</td>
+                            <td class=" ">May 23, 2014 11:30:12 PM</td>
+                            <td class=" ">121000208 <i class="success fa fa-long-arrow-up"></i>
+                            </td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$741.20</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="even pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000038</td>
+                            <td class=" ">May 24, 2014 10:55:33 PM</td>
+                            <td class=" ">121000203 <i class="success fa fa-long-arrow-up"></i>
+                            </td>
+                            <td class=" ">Mike Smith</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$432.26</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000037</td>
+                            <td class=" ">May 24, 2014 10:52:44 PM</td>
+                            <td class=" ">121000204</td>
+                            <td class=" ">Mike Smith</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$333.21</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="even pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">1</td>
+                            <td class=" ">May 24, 2014 11:47:56 PM </td>
+                            <td class=" ">121000210</td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$7.45</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000039</td>
+                            <td class=" ">May 26, 2014 11:30:12 PM</td>
+                            <td class=" ">121000208 <i class="error fa fa-long-arrow-down"></i>
+                            </td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$741.20</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="even pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000038</td>
+                            <td class=" ">May 26, 2014 10:55:33 PM</td>
+                            <td class=" ">121000203</td>
+                            <td class=" ">Mike Smith</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$432.26</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000037</td>
+                            <td class=" ">May 26, 2014 10:52:44 PM</td>
+                            <td class=" ">121000204</td>
+                            <td class=" ">Mike Smith</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$333.21</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+
+                          <tr class="even pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">1</td>
+                            <td class=" ">May 27, 2014 11:47:56 PM </td>
+                            <td class=" ">121000210</td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$7.45</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">1</td>
+                            <td class=" ">121000039</td>
+                            <td class=" ">May 28, 2014 11:30:12 PM</td>
+                            <td class=" ">121000208</td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$741.20</td>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+							
+						
+                  </div>
+                </div>
+              </div>
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Details <small>INSERT | MODIFY</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">YAST support</a>
+                          </li>
+
+                        </ul>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-name">User Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="user-name" required="required" class="form-control col-md-7 col-xs-12" value={{data.username}}>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email-id">Email Id <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="email-id" required="required" class="form-control col-md-7 col-xs-12" value={{data.useremail}}>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="contact-no">Contact No <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="contact-no" name="contact-no" required="required" class="form-control col-md-7 col-xs-12" value={{data.contact}}>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="blood-group" class="control-label col-md-3 col-sm-3 col-xs-12">Blood Group <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="blood-group" class="form-control col-md-7 col-xs-12" required="required" type="text" name="blood-group" value={{data.blood}}>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender <span class="required">*</span></label> 
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div id="gender" class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                              <input type="radio" name="gender" value="Male"> &nbsp; Male &nbsp;
+                            </label>
+                            <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                              <input type="radio" name="gender" value="Female"> Female
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Age<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="age" class="form-control col-md-7 col-xs-12" required="required" type="text" name="age" value={{data.age}}>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Location <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="location" class="form-control col-md-7 col-xs-12" required="required" type="text" name="location" value={{data.location}}>
+                        </div>
+                      </div>              
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Donated Blood Before </label> 
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div id="dbf" class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                              <input type="radio" name="dbf" value="yes"> &nbsp; Yes &nbsp;
+                            </label>
+                            <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                              <input type="radio" name="dbf" value="no"> No
+                            </label>
+                          </div>
+                        </div>
+                      </div>                        
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+						  <button class="btn btn-primary" type="reset">Reset</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            YAST - You Are SomeBody's Type 
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static "vendors/jquery/dist/jquery.min.js" %}" ></script>
+    <!-- Bootstrap -->
+    <script src="{% static "vendors/bootstrap/dist/js/bootstrap.min.js" %}" ></script>
+    <!-- FastClick -->
+    <script src="{% static "vendors/fastclick/lib/fastclick.js" %}" ></script>
+    <!-- NProgress -->
+    <script src="{% static "vendors/nprogress/nprogress.js" %}" ></script>
+    <!-- bootstrap-progressbar -->
+    <script src="{% static "vendors/bootstrap-progressbar/bootstrap-progressbar.min.js" %}" ></script>
+    <!-- iCheck -->
+    <script src="{% static "vendors/iCheck/icheck.min.js" %}" ></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="{% static "vendors/moment/moment.min.js" %}" ></script>
+    <script src="{% static "vendors/bootstrap-daterangepicker/daterangepicker.js" %}" ></script>
+    <!-- bootstrap-wysiwyg -->
+    <script src="{% static "vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js" %}" ></script>
+    <script src="{% static "vendors/jquery.hotkeys/jquery.hotkeys.js" %}" ></script>
+    <script src="{% static "vendors/google-code-prettify/src/prettify.js" %}" ></script>
+    <!-- jQuery Tags Input -->
+    <script src="{% static "vendors/jquery.tagsinput/src/jquery.tagsinput.js" %}" ></script>
+    <!-- Switchery -->
+    <script src="{% static "vendors/switchery/dist/switchery.min.js" %}" ></script>
+    <!-- Select2 -->
+    <script src="{% static "vendors/select2/dist/js/select2.full.min.js" %}" ></script>
+    <!-- Parsley -->
+    <script src="{% static "vendors/parsleyjs/dist/parsley.min.js" %}" ></script>
+    <!-- Autosize -->
+    <script src="{% static "vendors/autosize/dist/autosize.min.js" %}" ></script>
+    <!-- jQuery autocomplete -->
+    <script src="{% static "vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js" %}" ></script>
+    <!-- starrr -->
+    <script src="{% static "vendors/starrr/dist/starrr.js" %}" ></script>
+    <!-- Custom Theme Scripts -->
+    <script src="{% static "build/js/custom.min.js" %}" ></script>
+  </body>
+</html>

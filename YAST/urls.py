@@ -17,6 +17,7 @@ from django.conf.urls import *
 from django.contrib import admin
 from login.views import *
 
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', login, name = 'login'),
@@ -26,5 +27,9 @@ urlpatterns = [
     url(r'^cuVolunteer/', cuVolunteer, name = 'cuVolunteer'),
     url(r'^resetUser/', resetUser, name = 'resetUser'),
     url(r'^accounts/reset/(\d+)/(\d+)/$', reset_password, name='reset_password'), 
+    
+    ##Hospital UI
+    url('hospital/', include('hospital.urls')),
+    
     url(r'^', homePage, name = ''),
 ]
