@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from models import *
 from passlib.hash import sha256_crypt
 import json
@@ -76,6 +76,7 @@ def resetUser(request):
 
 def cuDashboard(request):
     login_info = request.session.get('username', 'guest')
+    
     if request.method == 'GET': 
         if(login_info[0].encode("utf-8")==""):
             return render(request, 'login.hmtl', {})
@@ -104,21 +105,27 @@ def cuDashboard(request):
             return render(request, 'cuDashboard.html', {"data":user})
     elif request.method == 'POST':
         rows = GetUserDetails(login_info[0])
-        if(rows):
-            return HttpResponse(str(json.dumps({'message':'Details Exist! Try Reset Options'})))
+        USERNAME = login_info[1].encode("utf-8")
+        USEREMAIL = login_info[0].encode("utf-8")
+        CONTACT = request.POST['contact-no']
+        BLOOD_GP = request.POST['blood-group']
+        GENDER = request.POST.get('gender')
+        AGE = request.POST['age']
+        ADDRESS = request.POST['address']
+        CITY = request.POST['city']
+        DONATE_Bf = request.POST.get('dbf')
+        if (request.POST['btntype'] == 'submit'):
+            if(rows):
+                return HttpResponse(str(json.dumps({'message':'Details Exist! Try Reset Option'})))
+            else:
+                enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
+                return HttpResponse(str(json.dumps({'message':'success'})))
         else:
-            USERNAME = login_info[1].encode("utf-8")
-            USEREMAIL = login_info[0].encode("utf-8")
-            CONTACT = request.POST['contact-no']
-            print CONTACT
-            BLOOD_GP = request.POST['blood-group']
-            GENDER = request.POST.get('gender')
-            AGE = request.POST['age']
-            ADDRESS = request.POST['address']
-            CITY = request.POST['city']
-            DONATE_Bf = request.POST['dbf']
-            enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
-            return HttpResponse(str(json.dumps({'message':'success'})))
+            if(rows):
+                updateUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
+                return HttpResponse(str(json.dumps({'message':'success'})))
+            else:
+                return HttpResponse(str(json.dumps({'message':'Details dont exist! Try Submit First'})))
 
 def login(request):
     if request.method == 'GET':

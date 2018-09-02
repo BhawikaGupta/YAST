@@ -88,7 +88,19 @@ def enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CI
     print USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf
     userAccount = users_profile(USEREMAIL = USEREMAIL, USERNAME = USERNAME, CONTACT = CONTACT,BLOOD_GP = BLOOD_GP,GENDER = GENDER,AGE = AGE,ADDRESS = ADDRESS,CITY = CITY,DONATE_Bf = DONATE_Bf)
     userAccount.save()
-    
+ 
+def updateUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf):
+    obj = users_profile.objects.get(USEREMAIL = USEREMAIL)
+    obj.USERNAME = USERNAME
+    obj.CONTACT = CONTACT
+    obj.BLOOD_GP = BLOOD_GP
+    obj.GENDER = GENDER
+    obj.AGE = AGE
+    obj.ADDRESS = ADDRESS
+    obj.CITY = CITY
+    obj.DONATE_Bf = DONATE_Bf
+    obj.save()
+ 
 def GetUserDetails(userEmail):
     try:
         user_object = users_profile.objects.get(USEREMAIL=userEmail)
