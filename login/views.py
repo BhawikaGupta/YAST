@@ -76,27 +76,45 @@ def resetUser(request):
 
 def cuDashboard(request):
     login_info = request.session.get('username', 'guest')
-    user = OrderedDict() 
-    user["useremail"]=login_info[0].encode("utf-8"),
-    user["username"]=login_info[1].encode("utf-8"),
-    user["contact"]="".encode("utf-8"),
-    user["blood"]="".encode("utf-8"),
-    user["gender"]="".encode("utf-8"),
-    user["age"]="".encode("utf-8"),
-    user["location"]="".encode("utf-8"),
-    user["donate"]="".encode("utf-8")
-    rows = GetUserDetails(login_info[0])
-    if(rows):
-        count = 0 
-        for key in user:
-            if key == "username":
-                continue
-            else:
-                user[key] = rows[count].encode("utf-8")
-                count = count +1
-    user["username"]=user["username"][0]
-    print user
-    return render(request, 'cuDashboard.html', {"data":user})
+    if request.method == 'GET':  
+        user = OrderedDict() 
+        user["USERNAME"]=login_info[1].encode("utf-8")
+        user["USEREMAIL"]=login_info[0].encode("utf-8")
+        user["CONTACT"]="".encode("utf-8")
+        user["BLOOD_GP"]="".encode("utf-8")
+        user["GENDER"]="".encode("utf-8")
+        user["AGE"]="".encode("utf-8")
+        user["ADDRESS"]="".encode("utf-8")
+        user["CITY"]="".encode("utf-8")
+        user["DONATE_Bf"]="".encode("utf-8")
+        rows = GetUserDetails(login_info[0])
+        if(rows):
+            user["USERNAME"]=rows.USERNAME.encode("utf-8")
+            user["USEREMAIL"]=rows.USEREMAIL.encode("utf-8")
+            user["CONTACT"]=str(rows.CONTACT).encode("utf-8")
+            user["BLOOD_GP"]=rows.BLOOD_GP.encode("utf-8")
+            user["GENDER"]=rows.GENDER.encode("utf-8")
+            user["AGE"]=str(rows.AGE).encode("utf-8")
+            user["ADDRESS"]=rows.ADDRESS.encode("utf-8")
+            user["CITY"]=rows.CITY.encode("utf-8")
+            user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
+        return render(request, 'cuDashboard.html', {"data":user})
+    elif request.method == 'POST':
+        rows = GetUserDetails(login_info[0])
+        if(rows):
+            return HttpResponse(str(json.dumps({'message':'Details Exist! Try Reset Options'})))
+        else:
+            USERNAME = login_info[1].encode("utf-8")
+            USEREMAIL = login_info[0].encode("utf-8")
+            CONTACT = request.POST['contact-no']
+            BLOOD_GP = request.POST['blood-group']
+            GENDER = request.POST.get('gender')
+            AGE = request.POST['age']
+            ADDRESS = request.POST['address']
+            CITY = request.POST['city']
+            DONATE_Bf = request.POST['dbf']
+            enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
+            return HttpResponse(str(json.dumps({'message':'success'})))
 
 def login(request):
     if request.method == 'GET':

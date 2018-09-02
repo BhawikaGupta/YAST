@@ -53,7 +53,7 @@
             <!-- menu profile quick info -->
             <div class="profile clearfix">
               <div class="text-center">
-                <h5 style="color:white;">Welcome, <b>{{data.username}}</b></h5> 
+                <h5 style="color:white;">Welcome, <b>{{data.USERNAME}}</b></h5> 
                 <hr color="white" width="80%">
               </div>
             </div>
@@ -65,13 +65,13 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <ul class="nav side-menu" style="font-size:13px;">
-                  <li><a><i class="fa fa-edit"></i> Donor Profile</a>
+                  <li><a href = "../cuDashboard/"><i class="fa fa-edit"></i> Donor Profile</a>
                   </li>
                   <hr color="white" width="80%">
-                  <li><a><i class="fa fa-desktop"></i> Need Blood</a>
+                  <li><a href = "../cuNeedBlood/"><i class="fa fa-desktop"></i> Need Blood</a>
                   </li>
                   <hr color="white" width="80%">
-                  <li><a><i class="fa fa-table"></i> Volunteer  </a>
+                  <li><a href = "../cuVolunteer/"><i class="fa fa-table"></i> Volunteer  </a>
                   </li>
 
                 </ul>
@@ -98,7 +98,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="images/img.jpg" alt="">{{data.username}}
+                    <img src="images/img.jpg" alt="">{{data.USERNAME}}
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -116,7 +116,7 @@
                       <a>
                         <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
                         <span>
-                          <span>{{data}}</span>
+                          <span>{{data.USERNAME}}</span>
                           <span class="time">3 mins ago</span>
                         </span>
                         <span class="message">
@@ -171,13 +171,13 @@
                   </div>
                   <div class="x_content">
                     <br />
-                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
+                    <form id="userForm" action="." method="post" role="form" data-parsley-validate class="form-horizontal form-label-left">
+                        {% csrf_token %}
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-name">User Name <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="user-name" required="required" class="form-control col-md-7 col-xs-12" value={{data.username}}>
+                          <input type="text" id="user-name" name = 'username 'required="required" class="form-control col-md-7 col-xs-12" value={{data.USERNAME}}>
                         </div>
                       </div>
                       
@@ -185,7 +185,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email-id">Email Id <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="email-id" required="required" class="form-control col-md-7 col-xs-12" value={{data.useremail}}>
+                          <input type="text" id="email-id" name = 'email' required="required" class="form-control col-md-7 col-xs-12" value={{data.USEREMAIL}} readonly>
                         </div>
                       </div>
                       
@@ -193,20 +193,20 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="contact-no">Contact No <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="contact-no" name="contact-no" required="required" class="form-control col-md-7 col-xs-12" value={{data.contact}}>
+                          <input type="text" id="contact-no" name="contact-no" required="required" class="form-control col-md-7 col-xs-12" value={{data.CONTACT}}>
                         </div>
                       </div>
                       <div class="form-group">
                         <label for="blood-group" class="control-label col-md-3 col-sm-3 col-xs-12">Blood Group <span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="blood-group" class="form-control col-md-7 col-xs-12" required="required" type="text" name="blood-group" value={{data.blood}}>
+                          <input id="blood-group" class="form-control col-md-7 col-xs-12" required="required" type="text" name="blood-group" value={{data.BLOOD_GP}}>
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender <span class="required">*</span></label> 
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div id="gender" class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                            <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
                               <input type="radio" name="gender" value="Male"> &nbsp; Male &nbsp;
                             </label>
                             <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
@@ -219,14 +219,21 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Age<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="age" class="form-control col-md-7 col-xs-12" required="required" type="text" name="age" value={{data.age}}>
+                          <input id="age" class="form-control col-md-7 col-xs-12" required="required" type="text" name="age" value={{data.AGE}}>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Location <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Address <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="location" class="form-control col-md-7 col-xs-12" required="required" type="text" name="location" value={{data.location}}>
+                          <input id="address" class="form-control col-md-7 col-xs-12" required="required" type="text" name="address" value={{data.ADDRESS}}>
+                        </div>
+                      </div>   
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">City <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="city" class="form-control col-md-7 col-xs-12" required="required" type="text" name="city" value={{data.CITY}}>
                         </div>
                       </div>              
                       <div class="form-group">
@@ -236,7 +243,7 @@
                             <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
                               <input type="radio" name="dbf" value="yes"> &nbsp; Yes &nbsp;
                             </label>
-                            <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                            <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
                               <input type="radio" name="dbf" value="no"> No
                             </label>
                           </div>
@@ -245,8 +252,8 @@
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-						  <button class="btn btn-primary" type="reset">Reset</button>
-                          <button type="submit" class="btn btn-success">Submit</button>
+						  <button name = "resetBtn" class="btn btn-primary" type="reset">Reset</button>
+                          <button name = "submitBtn" type="submit" class="btn btn-success">Submit</button>
                         </div>
                       </div>
 
@@ -308,5 +315,49 @@
     <script src="{% static "vendors/starrr/dist/starrr.js" %}" ></script>
     <!-- Custom Theme Scripts -->
     <script src="{% static "build/js/custom.min.js" %}" ></script>
+    <script src="{% static "js/script.js" %}"></script>
+    <script src="{% static "js/bootbox.min.js" %}"></script>
+    <script>
+    $(function(){
+	$('#submitBtn').click(function(){
+        var name = document.getElementById("user-name").value;
+        var email = document.getElementById("email-id").value;
+        var phone = document.getElementById("contact-no").value;
+        var bloodgroup = document.getElementById("blood-group").value;
+        var gender = document.getElementById("gender").value;        
+        var age = document.getElementById("age").value;        
+        var city = document.getElementById("city").value;
+        var address = document.getElementById("address").value;
+        var dbf = document.getElementById("dbf").value;
+        if(email.trim()=='')
+        {
+           bootbox.alert("Please enter Email");
+        }
+        else
+        {
+            $.ajax({
+                url: ".",
+                data: $('form').serialize(),
+                type: "POST",
+                success: function(response){
+                    var obj = jQuery.parseJSON(response);
+                    if(obj.message == "success"){
+                        console.log("Stupid");
+                        bootbox.alert(obj.message);
+                        }
+                    else
+                    {
+                        console.log("Stupid1");
+                        bootbox.alert(obj.message);
+                    }
+                },
+                error: function(error) {
+                    bootbox.alert("Server is not responding. Try again later!");
+                }
+            });
+        }
+	});
+});
+    </script>
   </body>
 </html>

@@ -8,11 +8,13 @@ from random import randint
 
 class users_profile(models.Model):
     USEREMAIL = models.CharField(max_length = 100)
+    USERNAME = models.CharField(max_length = 100)
     CONTACT = models.IntegerField()
     BLOOD_GP = models.CharField(max_length = 100)
     GENDER = models.CharField(max_length = 100)
     AGE = models.IntegerField()
-    LOCATION = models.CharField(max_length = 100)
+    ADDRESS = models.CharField(max_length = 100)
+    CITY = models.CharField(max_length = 100)
     DONATE_Bf = models.CharField(max_length = 100)
     class Meta:
       db_table = "users_profile"
@@ -80,6 +82,11 @@ def checkUser(userName):
     
 def signUpUser(userEmail, userName, encrypted_password, dept):
     userAccount = users(USERNAME=userEmail, NAME=userName, PASSWORD=encrypted_password, DEPARTMENT=dept)
+    userAccount.save()
+
+def enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf):
+    print USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf
+    userAccount = users_profile(USEREMAIL = USEREMAIL, USERNAME = USERNAME, CONTACT = CONTACT,BLOOD_GP = BLOOD_GP,GENDER = GENDER,AGE = AGE,ADDRESS = ADDRESS,CITY = CITY,DONATE_Bf = DONATE_Bf)
     userAccount.save()
     
 def GetUserDetails(userEmail):
