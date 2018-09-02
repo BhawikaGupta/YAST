@@ -76,29 +76,32 @@ def resetUser(request):
 
 def cuDashboard(request):
     login_info = request.session.get('username', 'guest')
-    if request.method == 'GET':  
-        user = OrderedDict() 
-        user["USERNAME"]=login_info[1].encode("utf-8")
-        user["USEREMAIL"]=login_info[0].encode("utf-8")
-        user["CONTACT"]="".encode("utf-8")
-        user["BLOOD_GP"]="".encode("utf-8")
-        user["GENDER"]="".encode("utf-8")
-        user["AGE"]="".encode("utf-8")
-        user["ADDRESS"]="".encode("utf-8")
-        user["CITY"]="".encode("utf-8")
-        user["DONATE_Bf"]="".encode("utf-8")
-        rows = GetUserDetails(login_info[0])
-        if(rows):
-            user["USERNAME"]=rows.USERNAME.encode("utf-8")
-            user["USEREMAIL"]=rows.USEREMAIL.encode("utf-8")
-            user["CONTACT"]=str(rows.CONTACT).encode("utf-8")
-            user["BLOOD_GP"]=rows.BLOOD_GP.encode("utf-8")
-            user["GENDER"]=rows.GENDER.encode("utf-8")
-            user["AGE"]=str(rows.AGE).encode("utf-8")
-            user["ADDRESS"]=rows.ADDRESS.encode("utf-8")
-            user["CITY"]=rows.CITY.encode("utf-8")
-            user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
-        return render(request, 'cuDashboard.html', {"data":user})
+    if request.method == 'GET': 
+        if(login_info[0].encode("utf-8")==""):
+            return render(request, 'login.hmtl', {})
+        else:
+            user = OrderedDict() 
+            user["USERNAME"]=login_info[1].encode("utf-8")
+            user["USEREMAIL"]=login_info[0].encode("utf-8")
+            user["CONTACT"]="".encode("utf-8")
+            user["BLOOD_GP"]="".encode("utf-8")
+            user["GENDER"]="".encode("utf-8")
+            user["AGE"]="".encode("utf-8")
+            user["ADDRESS"]="".encode("utf-8")
+            user["CITY"]="".encode("utf-8")
+            user["DONATE_Bf"]="".encode("utf-8")
+            rows = GetUserDetails(login_info[0])
+            if(rows):
+                user["USERNAME"]=rows.USERNAME.encode("utf-8")
+                user["USEREMAIL"]=rows.USEREMAIL.encode("utf-8")
+                user["CONTACT"]=str(rows.CONTACT).encode("utf-8")
+                user["BLOOD_GP"]=rows.BLOOD_GP.encode("utf-8")
+                user["GENDER"]=rows.GENDER.encode("utf-8")
+                user["AGE"]=str(rows.AGE).encode("utf-8")
+                user["ADDRESS"]=rows.ADDRESS.encode("utf-8")
+                user["CITY"]=rows.CITY.encode("utf-8")
+                user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
+            return render(request, 'cuDashboard.html', {"data":user})
     elif request.method == 'POST':
         rows = GetUserDetails(login_info[0])
         if(rows):
@@ -107,6 +110,7 @@ def cuDashboard(request):
             USERNAME = login_info[1].encode("utf-8")
             USEREMAIL = login_info[0].encode("utf-8")
             CONTACT = request.POST['contact-no']
+            print CONTACT
             BLOOD_GP = request.POST['blood-group']
             GENDER = request.POST.get('gender')
             AGE = request.POST['age']

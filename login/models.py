@@ -9,7 +9,7 @@ from random import randint
 class users_profile(models.Model):
     USEREMAIL = models.CharField(max_length = 100)
     USERNAME = models.CharField(max_length = 100)
-    CONTACT = models.IntegerField()
+    CONTACT = models.CharField(max_length = 100)
     BLOOD_GP = models.CharField(max_length = 100)
     GENDER = models.CharField(max_length = 100)
     AGE = models.IntegerField()
