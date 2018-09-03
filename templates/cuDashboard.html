@@ -177,7 +177,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-name">User Name <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="user-name" name = 'username 'required="required" class="form-control col-md-7 col-xs-12" value='{{data.USERNAME}}'>
+                          <input type="text" id="user-name" name = 'username' required="required" class="form-control col-md-7 col-xs-12" value='{{data.USERNAME}}'>
                         </div>
                       </div>
                       
@@ -224,6 +224,13 @@
                         </div>
                       </div>
                       <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Zip Code <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="zip" class="form-control col-md-7 col-xs-12" required="required" type="text" name="zip" value='{{data.ZIP}}'>
+                        </div>
+                      </div>  
+                      <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Address <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -236,7 +243,21 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input id="city" class="form-control col-md-7 col-xs-12" required="required" type="text" name="city" value='{{data.CITY}}'>
                         </div>
-                      </div>              
+                      </div>   
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">State <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="state" class="form-control col-md-7 col-xs-12" required="required" type="text" name="state" value='{{data.STATE}}'>
+                        </div>
+                      </div> 
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Country <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="country" class="form-control col-md-7 col-xs-12" required="required" type="text" name="country" value='{{data.COUNTRY}}'>
+                        </div>
+                      </div> 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Donated Blood Before </label> 
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -317,6 +338,52 @@
     
     
     <script>
+    $(document).ready(function() {
+    $("#zip").keypress(function(e) {
+    if(e.which == 13) {
+        var el = document.getElementById("zip").value;
+        if (/^[0-9]+$/.test(el)==true) {
+            $.ajax({
+            type: 'POST',
+            url: "http://maps.googleapis.com/maps/api/geocode/json?address=" + el + "&sensor=true?key=AIzaSyByHNzULe2W4eE2LAVH1NiA-NtInV-5EoQ",
+            success: function(data){
+                if(data["status"] == "OK")
+                {
+                    var listItem = $(data["results"][0]["address_components"]);
+                    listItem.each(function(idx, li) {
+                        var area = $(li);
+                        if(area[0]["types"][0] == "administrative_area_level_2")
+                        {
+                             $(city).val(area[0]["long_name"]).attr('readonly', 'readonly');
+                        }
+                        else if(area[0]["types"][0] == "administrative_area_level_1")
+                        {
+                             $(state).val(area[0]["long_name"]).attr('readonly', 'readonly');
+                        }
+                        else if(area[0]["types"][0] == "country")
+                        {
+                             $(country).val(area[0]["long_name"]).attr('readonly', 'readonly');
+                        }
+                    });
+                }
+                else
+                {
+                    bootbox.alert("Enter Correct Pin");
+                }
+            },
+            error: function(error) {
+                bootbox.alert("Server is not responding. Try again later!");
+            }
+    });
+    }
+    else
+    {
+        bootbox.alert("Enter correct Pin");
+    }
+    }
+    
+    });
+    });
     $(function(){
     $("input[name=gender][value='{{data.GENDER}}']").prop("checked",true);
     $("input[name=dbf][value='{{data.DONATE_Bf}}']").prop("checked",true);
@@ -328,7 +395,10 @@
         var gender = document.getElementById("gender").value;        
         var age = document.getElementById("age").value;        
         var city = document.getElementById("city").value;
+        var zip = document.getElementById("zip").value;
         var address = document.getElementById("address").value;
+        var state = document.getElementById("state").value;
+        var country = document.getElementById("country").value;
         var dbf = document.getElementById("dbf").value;
         if(/^[a-zA-z\s]+$/.test(name)==false)
         {
@@ -346,9 +416,21 @@
         {
            bootbox.alert("Enter age in correct format");
         }
+        else if(/^[0-9]+$/.test(zip)==false)
+        {
+           bootbox.alert("Enter zip in correct format");
+        }
         else if(/^[a-zA-z\s]+$/.test(city)==false)
         {
            bootbox.alert("Enter city in correct format");
+        }
+        else if(/^[a-zA-z\s]+$/.test(state)==false)
+        {
+           bootbox.alert("Enter state in correct format");
+        }
+        else if(/^[a-zA-z\s]+$/.test(country)==false)
+        {
+           bootbox.alert("Enter country in correct format");
         }
         else
         {
@@ -378,10 +460,13 @@
         var phone = document.getElementById("contact-no").value;
         var bloodgroup = document.getElementById("blood-group").value;
         var gender = document.getElementById("gender").value;        
-        var age = document.getElementById("age").value;        
+        var age = document.getElementById("age").value; 
+        var zip = document.getElementById("zip").value;
         var city = document.getElementById("city").value;
         var address = document.getElementById("address").value;
         var dbf = document.getElementById("dbf").value;
+        var state = document.getElementById("state");
+        var country = document.getElementById("country");
         if(/^[a-zA-z\s]+$/.test(name)==false)
         {
            bootbox.alert("Enter name in correct format");
@@ -398,9 +483,21 @@
         {
            bootbox.alert("Enter age in correct format");
         }
+        else if(/^[0-9]+$/.test(zip)==false)
+        {
+           bootbox.alert("Enter zip in correct format");
+        }
         else if(/^[a-zA-z\s]+$/.test(city)==false)
         {
            bootbox.alert("Enter city in correct format");
+        }
+        else if(/^[a-zA-z\s]+$/.test(state)==false)
+        {
+           bootbox.alert("Enter state in correct format");
+        }
+        else if(/^[a-zA-z\s]+$/.test(country)==false)
+        {
+           bootbox.alert("Enter country in correct format");
         }
         else
         {

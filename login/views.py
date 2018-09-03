@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 from django.urls import resolve
 import datetime
 from django.utils import timezone
+from distanceLongitudeLatitude import getLatitudeLongitude, getDistanceBetweenTwoPoints
 
    
 
@@ -88,8 +89,11 @@ def cuDashboard(request):
             user["BLOOD_GP"]="".encode("utf-8")
             user["GENDER"]="".encode("utf-8")
             user["AGE"]="".encode("utf-8")
+            user["ZIP"] = "".encode("utf-8")
             user["ADDRESS"]="".encode("utf-8")
             user["CITY"]="".encode("utf-8")
+            user["STATE"]="".encode("utf-8")
+            user["COUNTRY"]="".encode("utf-8")
             user["DONATE_Bf"]="".encode("utf-8")
             rows = GetUserDetails(login_info[0])
             if(rows):
@@ -99,8 +103,11 @@ def cuDashboard(request):
                 user["BLOOD_GP"]=rows.BLOOD_GP.encode("utf-8")
                 user["GENDER"]=rows.GENDER.encode("utf-8")
                 user["AGE"]=str(rows.AGE).encode("utf-8")
+                user["ZIP"]=rows.ZIP.encode("utf-8")
                 user["ADDRESS"]=rows.ADDRESS.encode("utf-8")
                 user["CITY"]=rows.CITY.encode("utf-8")
+                user["STATE"]=rows.STATE.encode("utf-8")
+                user["COUNTRY"]=rows.COUNTRY.encode("utf-8")
                 user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
             return render(request, 'cuDashboard.html', {"data":user})
     elif request.method == 'POST':
@@ -111,18 +118,24 @@ def cuDashboard(request):
         BLOOD_GP = request.POST['blood-group']
         GENDER = request.POST.get('gender')
         AGE = request.POST['age']
+        ZIP = request.POST['zip']
         ADDRESS = request.POST['address']
         CITY = request.POST['city']
+        STATE = request.POST['state']
+        COUNTRY = request.POST['country']
         DONATE_Bf = request.POST.get('dbf')
+        
         if (request.POST['btntype'] == 'submit'):
             if(rows):
                 return HttpResponse(str(json.dumps({'message':'Details Exist! Try Reset Option'})))
             else:
-                enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
+                LONGITUDE, LATITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())
+                enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ZIP,ADDRESS,CITY,STATE,COUNTRY,DONATE_Bf,LONGITUDE, LATITUDE)
                 return HttpResponse(str(json.dumps({'message':'success'})))
         else:
             if(rows):
-                updateUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
+                LONGITUDE, LATITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())
+                updateUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ZIP,ADDRESS,CITY,STATE,COUNTRY,DONATE_Bf,LONGITUDE, LATITUDE)
                 return HttpResponse(str(json.dumps({'message':'success'})))
             else:
                 return HttpResponse(str(json.dumps({'message':'Details dont exist! Try Submit First'})))
