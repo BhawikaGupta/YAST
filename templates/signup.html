@@ -77,6 +77,9 @@
 
    
     <br><br><br><br><br><br><br>
+    <div id="wait" style="display:none;width:89px;height:89px;position:absolute;top:50%;left:50%;padding:2px;">
+               <img src="{% static "images/demo_wait.gif" %}" width="164" height="164" /><br>
+               </div>
     <!-- Footer
     ================================================= -->
 		<footer id="footer">
@@ -102,6 +105,14 @@
     <script src="{% static "js/script.js" %}"></script>
     <script src="{% static "js/bootbox.min.js" %}"></script>
     <script>
+    $(document).ready(function() {
+    $(document).ajaxStart(function(){
+        $("#wait").css("display", "block");
+    });
+    $(document).ajaxComplete(function(){
+        $("#wait").css("display", "none");
+    });
+    });
     $(function(){
 	$('#signButton').click(function(){
         var password1 = document.getElementById("example-password").value;
@@ -144,7 +155,6 @@
                     console.log(obj);
                     if(obj.message == "success"){
                         bootbox.alert("User created successfully. Please login into your account");
-                        window.location.href = "../login";
                         }
                     else
                     {

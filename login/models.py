@@ -9,13 +9,18 @@ from random import randint
 class users_profile(models.Model):
     USEREMAIL = models.CharField(max_length = 100)
     USERNAME = models.CharField(max_length = 100)
-    CONTACT = models.IntegerField()
+    CONTACT = models.CharField(max_length = 100)
     BLOOD_GP = models.CharField(max_length = 100)
     GENDER = models.CharField(max_length = 100)
     AGE = models.IntegerField()
+    ZIP = models.CharField(max_length = 100)
     ADDRESS = models.CharField(max_length = 100)
     CITY = models.CharField(max_length = 100)
+    STATE = models.CharField(max_length = 100)
+    COUNTRY = models.CharField(max_length = 100)
     DONATE_Bf = models.CharField(max_length = 100)
+    LONGITUDE = models.CharField(max_length = 100)
+    LATITUDE = models.CharField(max_length = 100)
     class Meta:
       db_table = "users_profile"
 
@@ -84,11 +89,27 @@ def signUpUser(userEmail, userName, encrypted_password, dept):
     userAccount = users(USERNAME=userEmail, NAME=userName, PASSWORD=encrypted_password, DEPARTMENT=dept)
     userAccount.save()
 
-def enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf):
-    print USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf
-    userAccount = users_profile(USEREMAIL = USEREMAIL, USERNAME = USERNAME, CONTACT = CONTACT,BLOOD_GP = BLOOD_GP,GENDER = GENDER,AGE = AGE,ADDRESS = ADDRESS,CITY = CITY,DONATE_Bf = DONATE_Bf)
+def enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ZIP,ADDRESS,CITY,STATE,COUNTRY,DONATE_Bf,LONGITUDE, LATITUDE):
+    userAccount = users_profile(USEREMAIL = USEREMAIL, USERNAME = USERNAME, CONTACT = CONTACT,BLOOD_GP = BLOOD_GP,GENDER = GENDER,AGE = AGE,ZIP = ZIP,ADDRESS = ADDRESS,CITY = CITY, STATE = STATE, COUNTRY=COUNTRY,DONATE_Bf = DONATE_Bf, LONGITUDE = LONGITUDE, LATITUDE = LATITUDE)
     userAccount.save()
-    
+ 
+def updateUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ZIP,ADDRESS,CITY,STATE,COUNTRY,DONATE_Bf,LONGITUDE, LATITUDE):
+    obj = users_profile.objects.get(USEREMAIL = USEREMAIL)
+    obj.USERNAME = USERNAME
+    obj.CONTACT = CONTACT
+    obj.BLOOD_GP = BLOOD_GP
+    obj.GENDER = GENDER
+    obj.AGE = AGE
+    obj.ZIP = ZIP
+    obj.ADDRESS = ADDRESS
+    obj.CITY = CITY
+    obj.STATE = STATE
+    obj.COUNTRY = COUNTRY
+    obj.DONATE_Bf = DONATE_Bf
+    obj.LONGITUDE = LONGITUDE
+    obj.LATITUDE = LATITUDE
+    obj.save()
+ 
 def GetUserDetails(userEmail):
     try:
         user_object = users_profile.objects.get(USEREMAIL=userEmail)
