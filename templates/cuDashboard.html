@@ -94,11 +94,11 @@
               <div class="nav toggle">
                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
               </div>
-
+               
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="images/img.jpg" alt="">'{{data.USERNAME}}'
+                    <img src="images/img.jpg" alt="">{{data.USERNAME}}
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -139,7 +139,7 @@
           </div>
         </div>
         <!-- /top navigation -->
-
+        
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
@@ -228,7 +228,9 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input id="zip" class="form-control col-md-7 col-xs-12" required="required" type="text" name="zip" value='{{data.ZIP}}'>
-                        </div>
+                          <button id = "lookupBtn" class="btn btn-primary col-md-3 col-sm-3 col-xs-12" type="button">Lookup</button>
+                        </div> 
+                        </div
                       </div>  
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Address <span class="required">*</span>
@@ -241,21 +243,21 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">City <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="city" class="form-control col-md-7 col-xs-12" required="required" type="text" name="city" value='{{data.CITY}}'>
+                          <input id="city" class="form-control col-md-7 col-xs-12" required="required" type="text" name="city" value='{{data.CITY}}' readonly>
                         </div>
                       </div>   
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">State <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="state" class="form-control col-md-7 col-xs-12" required="required" type="text" name="state" value='{{data.STATE}}'>
+                          <input id="state" class="form-control col-md-7 col-xs-12" required="required" type="text" name="state" value='{{data.STATE}}' readonly>
                         </div>
                       </div> 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Country <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="country" class="form-control col-md-7 col-xs-12" required="required" type="text" name="country" value='{{data.COUNTRY}}'>
+                          <input id="country" class="form-control col-md-7 col-xs-12" required="required" type="text" name="country" value='{{data.COUNTRY}}' readonly>
                         </div>
                       </div> 
                       <div class="form-group">
@@ -286,7 +288,9 @@
           </div>
         </div>
         <!-- /page content -->
-
+        <div id="wait" style="display:none;width:89px;height:89px;position:absolute;top:50%;left:50%;padding:2px;">
+               <img src="{% static "images/demo_wait.gif" %}" width="164" height="164" /><br>
+               </div>
         <!-- footer content -->
         <footer>
           <div class="pull-right">
@@ -339,8 +343,13 @@
     
     <script>
     $(document).ready(function() {
-    $("#zip").keypress(function(e) {
-    if(e.which == 13) {
+    $(document).ajaxStart(function(){
+        $("#wait").css("display", "block");
+    });
+    $(document).ajaxComplete(function(){
+        $("#wait").css("display", "none");
+    });
+    $('#lookupBtn').click(function(){
         var el = document.getElementById("zip").value;
         if (/^[0-9]+$/.test(el)==true) {
             $.ajax({
@@ -350,21 +359,42 @@
                 if(data["status"] == "OK")
                 {
                     var listItem = $(data["results"][0]["address_components"]);
+                    types_list = [];
                     listItem.each(function(idx, li) {
                         var area = $(li);
                         if(area[0]["types"][0] == "administrative_area_level_2")
                         {
                              $(city).val(area[0]["long_name"]).attr('readonly', 'readonly');
+                             types_list.push(area[0]["types"][0]);
+                             types_list.push(area[0]["types"][1]);
                         }
                         else if(area[0]["types"][0] == "administrative_area_level_1")
                         {
                              $(state).val(area[0]["long_name"]).attr('readonly', 'readonly');
+                             types_list.push(area[0]["types"]);
+                             types_list.push(area[0]["types"][0]);
+                             types_list.push(area[0]["types"][1]);
                         }
                         else if(area[0]["types"][0] == "country")
                         {
                              $(country).val(area[0]["long_name"]).attr('readonly', 'readonly');
+                             types_list.push(area[0]["types"][0]);
+                             types_list.push(area[0]["types"][1]);
                         }
                     });
+                    if($.inArray("administrative_area_level_2", types_list) == -1)
+                    {
+                        $(city).val("").removeAttr("readonly");;
+                    }
+                    if($.inArray("administrative_area_level_1", types_list) == -1)
+                    {
+                        $(state).val("").removeAttr("readonly");;
+                    }
+                    if($.inArray("country", types_list) == -1)
+                    {
+                        $(country).val("").removeAttr("readonly");;
+                    }
+                  
                 }
                 else
                 {
@@ -375,11 +405,6 @@
                 bootbox.alert("Server is not responding. Try again later!");
             }
     });
-    }
-    else
-    {
-        bootbox.alert("Enter correct Pin");
-    }
     }
     
     });
