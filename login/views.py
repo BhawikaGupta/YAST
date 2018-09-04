@@ -99,10 +99,10 @@ def cuDashboard(request):
             user["CITY"]=rows.CITY.encode("utf-8")
             user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
         return render(request, 'cuDashboard.html', {"data":user})
-    elif request.method == 'POST':
+    else:
         rows = GetUserDetails(login_info[0])
         if(rows):
-            return HttpResponse(str(json.dumps({'message':'Details Exist! Try Reset Options'})))
+            return HttpResponse(json.dumps({'message':'Details Exist! Try Reset Options'}),content_type="application/json")
         else:
             USERNAME = login_info[1].encode("utf-8")
             USEREMAIL = login_info[0].encode("utf-8")
@@ -114,7 +114,7 @@ def cuDashboard(request):
             CITY = request.POST['city']
             DONATE_Bf = request.POST['dbf']
             enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
-            return HttpResponse(str(json.dumps({'message':'success'})))
+            return HttpResponseRedirect(str(json.dumps({'message':'success'})))
 
 def login(request):
     if request.method == 'GET':

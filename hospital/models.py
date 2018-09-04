@@ -32,3 +32,10 @@ class donor_predict(models.Model):
     
     def __str__(self):
        return '%s (%s)' % (str(self.OP_ID),self.BLOOD_GROUP)
+       
+def GetDonorPredict():
+    try:
+        donor_list = donor_predict.objects.all().order_by("NET_RANK")
+    except donor_list.DoesNotExist:
+        donor_list = None
+    return donor_list     

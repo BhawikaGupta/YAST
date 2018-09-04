@@ -171,7 +171,7 @@
                   </div>
                   <div class="x_content">
                     <br />
-                    <form id="userForm" action="." method="post" role="form" data-parsley-validate class="form-horizontal form-label-left">
+                    <form id="userForm"  method="post" role="form" data-parsley-validate class="form-horizontal form-label-left">
                         {% csrf_token %}
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-name">User Name <span class="required">*</span>
@@ -253,7 +253,7 @@
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
 						  <button name = "resetBtn" class="btn btn-primary" type="reset">Reset</button>
-                          <button name = "submitBtn" type="submit" class="btn btn-success">Submit</button>
+                          <button name = "submitBtn" type="submit" id="submitBtn" class="btn btn-success">Submit</button>
                         </div>
                       </div>
 
@@ -313,13 +313,11 @@
     <script src="{% static "vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js" %}" ></script>
     <!-- starrr -->
     <script src="{% static "vendors/starrr/dist/starrr.js" %}" ></script>
-    <!-- Custom Theme Scripts -->
-    <script src="{% static "build/js/custom.min.js" %}" ></script>
-    <script src="{% static "js/script.js" %}"></script>
-    <script src="{% static "js/bootbox.min.js" %}"></script>
+    
     <script>
     $(function(){
 	$('#submitBtn').click(function(){
+        
         var name = document.getElementById("user-name").value;
         var email = document.getElementById("email-id").value;
         var phone = document.getElementById("contact-no").value;
@@ -335,21 +333,16 @@
         }
         else
         {
+            alert("hi");
             $.ajax({
                 url: ".",
                 data: $('form').serialize(),
                 type: "POST",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
                 success: function(response){
-                    var obj = jQuery.parseJSON(response);
-                    if(obj.message == "success"){
-                        console.log("Stupid");
-                        bootbox.alert(obj.message);
-                        }
-                    else
-                    {
-                        console.log("Stupid1");
-                        bootbox.alert(obj.message);
-                    }
+                    alert("hi");
+                    console.log("Hi");
                 },
                 error: function(error) {
                     bootbox.alert("Server is not responding. Try again later!");
@@ -358,6 +351,13 @@
         }
 	});
 });
-    </script>
+    </script>    
+    
+    <!-- Custom Theme Scripts -->
+    <script src="{% static "build/js/custom.min.js" %}" ></script>
+    <script src="{% static "js/script.js" %}"></script>
+    <script src="{% static "js/bootbox.min.js" %}"></script>
+    
+    
   </body>
 </html>
