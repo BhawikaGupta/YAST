@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from models import *
 from passlib.hash import sha256_crypt
 import json
@@ -15,7 +15,6 @@ from django.template.loader import render_to_string
 from django.urls import resolve
 import datetime
 from django.utils import timezone
-from distanceLongitudeLatitude import getLatitudeLongitude, getDistanceBetweenTwoPoints
 
    
 
@@ -77,68 +76,45 @@ def resetUser(request):
 
 def cuDashboard(request):
     login_info = request.session.get('username', 'guest')
-    
-    if request.method == 'GET': 
-        if(login_info[0].encode("utf-8")==""):
-            return render(request, 'login.hmtl', {})
-        else:
-            user = OrderedDict() 
-            user["USERNAME"]=login_info[1].encode("utf-8")
-            user["USEREMAIL"]=login_info[0].encode("utf-8")
-            user["CONTACT"]="".encode("utf-8")
-            user["BLOOD_GP"]="".encode("utf-8")
-            user["GENDER"]="".encode("utf-8")
-            user["AGE"]="".encode("utf-8")
-            user["ZIP"] = "".encode("utf-8")
-            user["ADDRESS"]="".encode("utf-8")
-            user["CITY"]="".encode("utf-8")
-            user["STATE"]="".encode("utf-8")
-            user["COUNTRY"]="".encode("utf-8")
-            user["DONATE_Bf"]="".encode("utf-8")
-            rows = GetUserDetails(login_info[0])
-            if(rows):
-                user["USERNAME"]=rows.USERNAME.encode("utf-8")
-                user["USEREMAIL"]=rows.USEREMAIL.encode("utf-8")
-                user["CONTACT"]=str(rows.CONTACT).encode("utf-8")
-                user["BLOOD_GP"]=rows.BLOOD_GP.encode("utf-8")
-                user["GENDER"]=rows.GENDER.encode("utf-8")
-                user["AGE"]=str(rows.AGE).encode("utf-8")
-                user["ZIP"]=rows.ZIP.encode("utf-8")
-                user["ADDRESS"]=rows.ADDRESS.encode("utf-8")
-                user["CITY"]=rows.CITY.encode("utf-8")
-                user["STATE"]=rows.STATE.encode("utf-8")
-                user["COUNTRY"]=rows.COUNTRY.encode("utf-8")
-                user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
-            return render(request, 'cuDashboard.html', {"data":user})
-    elif request.method == 'POST':
+    if request.method == 'GET':  
+        user = OrderedDict() 
+        user["USERNAME"]=login_info[1].encode("utf-8")
+        user["USEREMAIL"]=login_info[0].encode("utf-8")
+        user["CONTACT"]="".encode("utf-8")
+        user["BLOOD_GP"]="".encode("utf-8")
+        user["GENDER"]="".encode("utf-8")
+        user["AGE"]="".encode("utf-8")
+        user["ADDRESS"]="".encode("utf-8")
+        user["CITY"]="".encode("utf-8")
+        user["DONATE_Bf"]="".encode("utf-8")
         rows = GetUserDetails(login_info[0])
-        USERNAME = login_info[1].encode("utf-8")
-        USEREMAIL = login_info[0].encode("utf-8")
-        CONTACT = request.POST['contact-no']
-        BLOOD_GP = request.POST['blood-group']
-        GENDER = request.POST.get('gender')
-        AGE = request.POST['age']
-        ZIP = request.POST['zip']
-        ADDRESS = request.POST['address']
-        CITY = request.POST['city']
-        STATE = request.POST['state']
-        COUNTRY = request.POST['country']
-        DONATE_Bf = request.POST.get('dbf')
-        
-        if (request.POST['btntype'] == 'submit'):
-            if(rows):
-                return HttpResponse(str(json.dumps({'message':'Details Exist! Try Reset Option'})))
-            else:
-                LONGITUDE, LATITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())
-                enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ZIP,ADDRESS,CITY,STATE,COUNTRY,DONATE_Bf,LONGITUDE, LATITUDE)
-                return HttpResponse(str(json.dumps({'message':'success'})))
+        if(rows):
+            user["USERNAME"]=rows.USERNAME.encode("utf-8")
+            user["USEREMAIL"]=rows.USEREMAIL.encode("utf-8")
+            user["CONTACT"]=str(rows.CONTACT).encode("utf-8")
+            user["BLOOD_GP"]=rows.BLOOD_GP.encode("utf-8")
+            user["GENDER"]=rows.GENDER.encode("utf-8")
+            user["AGE"]=str(rows.AGE).encode("utf-8")
+            user["ADDRESS"]=rows.ADDRESS.encode("utf-8")
+            user["CITY"]=rows.CITY.encode("utf-8")
+            user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
+        return render(request, 'cuDashboard.html', {"data":user})
+    else:
+        rows = GetUserDetails(login_info[0])
+        if(rows):
+            return HttpResponse(json.dumps({'message':'Details Exist! Try Reset Options'}),content_type="application/json")
         else:
-            if(rows):
-                LONGITUDE, LATITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())
-                updateUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ZIP,ADDRESS,CITY,STATE,COUNTRY,DONATE_Bf,LONGITUDE, LATITUDE)
-                return HttpResponse(str(json.dumps({'message':'success'})))
-            else:
-                return HttpResponse(str(json.dumps({'message':'Details dont exist! Try Submit First'})))
+            USERNAME = login_info[1].encode("utf-8")
+            USEREMAIL = login_info[0].encode("utf-8")
+            CONTACT = request.POST['contact-no']
+            BLOOD_GP = request.POST['blood-group']
+            GENDER = request.POST.get('gender')
+            AGE = request.POST['age']
+            ADDRESS = request.POST['address']
+            CITY = request.POST['city']
+            DONATE_Bf = request.POST['dbf']
+            enterUserDetails(USEREMAIL, USERNAME, CONTACT,BLOOD_GP,GENDER,AGE,ADDRESS,CITY,DONATE_Bf)
+            return HttpResponseRedirect(str(json.dumps({'message':'success'})))
 
 def login(request):
     if request.method == 'GET':
