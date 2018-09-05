@@ -94,6 +94,7 @@
               <div class="nav toggle">
                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
               </div>
+
                
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
@@ -102,7 +103,7 @@
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="../login"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                    <li><a href="../login/"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                   </ul>
                 </li>
 
@@ -139,6 +140,7 @@
           </div>
         </div>
         <!-- /top navigation -->
+
         
         <!-- page content -->
         <div class="right_col" role="main">
@@ -171,7 +173,7 @@
                   </div>
                   <div class="x_content">
                     <br />
-                    <form id="userForm" role="form" data-parsley-validate class="form-horizontal form-label-left">
+                    <form id="userForm" role="form" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
                         {% csrf_token %}
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user-name">User Name <span class="required">*</span>
@@ -205,13 +207,18 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender <span class="required">*</span></label> 
                         <div class="col-md-6 col-sm-6 col-xs-12">
+
+
                           <div id="gender" >
                            
                               <input type="radio" name="gender" value="Male" required> &nbsp; Male &nbsp;
+
+
                               <input type="radio" name="gender" value="Female" >&nbsp; Female &nbsp;
                            
                            
                               <input type="radio" name="gender" value="Other">&nbsp; Other &nbsp;
+
                            
                           </div>
                         </div>
@@ -226,10 +233,14 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Zip Code <span class="required">*</span>
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-10">
+                        
                           <input id="zip" class="form-control col-md-7 col-xs-12" required="required" type="text" name="zip" value='{{data.ZIP}}'>
-                          <button id = "lookupBtn" class="btn btn-primary col-md-3 col-sm-3 col-xs-12" type="button">Lookup</button>
+
                         </div> 
+                        <div class="col-md-3 col-sm-3 col-xs-8">
+                          <button id = "lookupBtn" class="btn btn-primary col-md-4 col-sm-4 col-xs-4" type="button">Lookup</button>
+                        </div>
                         </div
                       </div>  
                       <div class="form-group">
@@ -243,29 +254,35 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">City <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="city" class="form-control col-md-7 col-xs-12" required="required" type="text" name="city" value='{{data.CITY}}' readonly>
+                          <input id="city" class="form-control col-md-7 col-xs-12" type="text" name="city" value='{{data.CITY}}' readonly>
                         </div>
+
                       </div>   
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">State <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="state" class="form-control col-md-7 col-xs-12" required="required" type="text" name="state" value='{{data.STATE}}' readonly>
+                          <input id="state" class="form-control col-md-7 col-xs-12" type="text" name="state" value='{{data.STATE}}' readonly>
                         </div>
                       </div> 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Country <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="country" class="form-control col-md-7 col-xs-12" required="required" type="text" name="country" value='{{data.COUNTRY}}' readonly>
+                          <input id="country" class="form-control col-md-7 col-xs-12" type="text" name="country" value='{{data.COUNTRY}}' readonly>
                         </div>
                       </div> 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Donated Blood Before </label> 
                         <div class="col-md-6 col-sm-6 col-xs-12">
+
+
                           <div id="dbf">
                               <input type="radio" name="dbf" value="yes" required> &nbsp; Yes &nbsp;
+
+
                               <input type="radio" name="dbf" value="no"> No
+
                           </div>
                         </div>
                       </div>                        
@@ -273,7 +290,7 @@
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
 						  <button id = "resetBtn" class="btn btn-primary" type="button">Reset</button>
-                          <button id = "submitBtn" type="button" class="btn btn-success">Submit</button>
+                          <button id = "submitBtn"  class="btn btn-success">Submit</button>
                         </div>
                       </div>
 
@@ -288,6 +305,7 @@
           </div>
         </div>
         <!-- /page content -->
+
         <div id="wait" style="display:none;width:89px;height:89px;position:absolute;top:50%;left:50%;padding:2px;">
                <img src="{% static "images/demo_wait.gif" %}" width="164" height="164" /><br>
                </div>
@@ -343,6 +361,8 @@
     
     <script>
     $(document).ready(function() {
+    $("input[name=gender][value='{{data.GENDER}}']").prop("checked",true);
+    $("input[name=dbf][value='{{data.DONATE_Bf}}']").prop("checked",true);
     $(document).ajaxStart(function(){
         $("#wait").css("display", "block");
     });
@@ -351,7 +371,8 @@
     });
     $('#lookupBtn').click(function(){
         var el = document.getElementById("zip").value;
-        if (/^[0-9]+$/.test(el)==true) {
+        console.log(el.length)
+        if ( (el.length > 1) || /^[0-9]+$/.test(el)==true ) {
             $.ajax({
             type: 'POST',
             url: "http://maps.googleapis.com/maps/api/geocode/json?address=" + el + "&sensor=true?key=AIzaSyByHNzULe2W4eE2LAVH1NiA-NtInV-5EoQ",
@@ -406,12 +427,14 @@
             }
     });
     }
+        else {
+            bootbox.alert("Enter Correct Pin");
+        }
+    });
+    });
     
-    });
-    });
     $(function(){
-    $("input[name=gender][value='{{data.GENDER}}']").prop("checked",true);
-    $("input[name=dbf][value='{{data.DONATE_Bf}}']").prop("checked",true);
+
     $('#resetBtn').click(function(){
         var name = document.getElementById("user-name").value;
         var email = document.getElementById("email-id").value;
@@ -425,6 +448,7 @@
         var state = document.getElementById("state").value;
         var country = document.getElementById("country").value;
         var dbf = document.getElementById("dbf").value;
+
         if(/^[a-zA-z\s]+$/.test(name)==false)
         {
            bootbox.alert("Enter name in correct format");
@@ -459,11 +483,16 @@
         }
         else
         {
+
             $.ajax({
                 url: ".",
                 data: $('form').serialize() + "&btntype=reset",
                 type: "POST",
+
+
                 success: function(response){
+
+
                     var obj = jQuery.parseJSON(response);
                     if(obj.message == "success"){
                         bootbox.alert("Details Updates Successfully");
@@ -548,5 +577,12 @@
 	});
 });
     </script>
+
+
+
+
+
+
+
   </body>
 </html>
