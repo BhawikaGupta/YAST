@@ -235,7 +235,7 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-10">
                         
-                          <input id="zip" class="form-control col-md-7 col-xs-12" required="required" type="text" name="zip" value='{{data.ZIP}}'>
+                          <input id="zip" class="form-control col-md-7 col-xs-12" required="required" type="text" name="zip" value={{data.ZIP}}>
 
                         </div> 
                         <div class="col-md-3 col-sm-3 col-xs-8">
@@ -371,7 +371,6 @@
     });
     $('#lookupBtn').click(function(){
         var el = document.getElementById("zip").value;
-        console.log(el.length)
         if ( (el.length > 1) || /^[0-9]+$/.test(el)==true ) {
             $.ajax({
             type: 'POST',
@@ -563,6 +562,7 @@
                     var obj = jQuery.parseJSON(response);
                     if(obj.message == "success"){
                         bootbox.alert("Details Entered Successfully");
+                        window.location.href = "/cuDashboard/";
                         }
                     else
                     {

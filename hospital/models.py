@@ -33,9 +33,59 @@ class donor_predict(models.Model):
     def __str__(self):
        return '%s (%s)' % (str(self.OP_ID),self.BLOOD_GROUP)
        
-def GetDonorPredict():
-    try:
-        donor_list = donor_predict.objects.all().order_by("NET_RANK")
-    except donor_list.DoesNotExist:
-        donor_list = None
-    return donor_list     
+       
+class hospital_info(models.Model):
+    HOSPITAL_ID = models.IntegerField(primary_key=True)
+    CHAIN_ID = models.IntegerField()
+    HOSPITAL_NAME = models.CharField(max_length = 100)
+    CHAIN_NAME = models.CharField(max_length = 100)
+    ZIP = models.CharField(max_length = 100)
+    ADDRESS = models.CharField(max_length = 100)
+    CITY = models.CharField(max_length = 100)
+    STATE = models.CharField(max_length = 120)
+    COUNTRY = models.CharField(max_length = 100)
+    LONGITUDE = models.CharField(max_length = 100)
+    LATITUDE = models.CharField(max_length = 100)
+    CONTACT_NO = models.CharField(max_length = 100)
+    EMAIL = models.CharField(max_length = 100)   
+    HOSPITAL_OWNERSHIP = models.CharField(max_length = 100)   
+    HOSPITAL_TYPE = models.CharField(max_length = 100)       
+    BLOOD_COLL_FACILITY = models.CharField(max_length = 100)
+    APositive = models.IntegerField()
+    ABPositive = models.IntegerField()
+    OPositive = models.IntegerField()
+    BPositive = models.IntegerField()
+    ANegative = models.IntegerField()
+    ABNegative = models.IntegerField()
+    ONegative = models.IntegerField()
+    BNegative = models.IntegerField()
+    TOTAL_BEDS = models.IntegerField()
+    SPECIALITY = models.CharField(max_length = 100)
+    STAFF_COUNT = models.IntegerField()
+    DOCTOR_COUNT = models.IntegerField()
+    FOOTFALL = models.IntegerField()
+
+
+    
+    def __str__(self):
+       return '%s (%s)' % (str(self.HOSPITAL_NAME),self.CITY)       
+       
+       
+class blood_bank_master(models.Model):
+    BLOOD_ID = models.IntegerField(primary_key=True)
+    HOSPITAL_ID = models.IntegerField()
+    DONOR_OP_ID = models.IntegerField()
+    BLOOD_QTY = models.IntegerField()
+    DONATION_DATE = models.CharField(max_length = 100)
+    DONATION_TIME = models.CharField(max_length = 100)
+    BLOOD_STATUS = models.CharField(max_length = 100)
+    SYSPHILIS = models.CharField(max_length = 100)
+    HIV_POS = models.CharField(max_length = 100)
+    HEPATITUS_POS = models.CharField(max_length = 100)
+    OTHER_DISEASE = models.CharField(max_length = 100)
+    BLOOD_COLL_METHOD = models.CharField(max_length = 100)
+    BLOOD_DON_TYPE = models.CharField(max_length = 100)    
+    BLOOD_INTEND_USE = models.CharField(max_length = 100)    
+    def __str__(self):
+       return '%s' % (str(self.BLOOD_ID))              
+
