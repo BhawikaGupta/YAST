@@ -64,9 +64,7 @@ class hospital_info(models.Model):
     STAFF_COUNT = models.IntegerField()
     DOCTOR_COUNT = models.IntegerField()
     FOOTFALL = models.IntegerField()
-
-
-    
+   
     def __str__(self):
        return '%s (%s)' % (str(self.HOSPITAL_NAME),self.CITY)       
        

@@ -16,17 +16,105 @@ from django.urls import resolve
 import datetime
 from django.utils import timezone
 from distanceLongitudeLatitude import getLatitudeLongitude, getDistanceBetweenTwoPoints
-
+from operator import itemgetter
    
 
 def homePage(request):
     return render(request, 'homePage.html', {})
     
 def cuNeedBlood(request):
-    return render(request, 'cuNeedBlood.html', {})    
-    
+    login_info = request.session.get('username', 'guest')
+    if request.method == 'GET':
+        if(login_info[0].encode("utf-8")==""):
+            return render(request, 'cuNeedBlood.html', {})
+        else:
+            user = OrderedDict() 
+            user["ACCOUNTNAME"]=login_info[1].encode("utf-8")
+            user["ACCOUNTEMAIL"]=login_info[0].encode("utf-8")
+            user["LOOKUP_KEY"]="".encode('utf-8')
+            user["ZIP"]="".encode('utf-8')
+            user["ADDRESS"]="".encode('utf-8')
+            user["CITY"]="".encode('utf-8')
+            user["STATE"]="".encode('utf-8')
+            user["COUNTRY"]="".encode('utf-8')
+            user["BLOOD_GP"]="".encode('utf-8')
+            user["USERNAME"]="".encode('utf-8')
+            user["CONTACT"]="".encode('utf-8')
+            user["USEREMAIL"]="".encode('utf-8')
+            user["DATE"]="".encode('utf-8')
+            data = getUserNeedBloodDetails(login_info[0].encode("utf-8"))
+            if(data):
+                bloodGroup = ""
+                if(data.BLOOD_GP[1] == "P"):
+                    bloodGroup = data.BLOOD_GP[0] + "+"
+                elif(data.BLOOD_GP[2] == "P"):
+                    bloodGroup = data.BLOOD_GP[0:2] + "+"
+                elif(data.BLOOD_GP[1] == "N"):
+                    bloodGroup = data.BLOOD_GP[0] + "-"
+                elif(data.BLOOD_GP[2] == "N"):
+                    bloodGroup = data.BLOOD_GP[0:2] + "-"                    
+                user["LOOKUP_KEY"]=data.LOOKUP_KEY.encode('utf-8')
+                user["ZIP"]=data.ZIP.encode('utf-8')
+                user["ADDRESS"]=data.ADDRESS.encode('utf-8')
+                user["CITY"]=data.CITY.encode('utf-8')
+                user["STATE"]=data.STATE.encode('utf-8')
+                user["COUNTRY"]=data.COUNTRY.encode('utf-8')
+                user["BLOOD_GP"]=bloodGroup.encode('utf-8')
+                user["USERNAME"]=data.USERNAME.encode('utf-8')
+                user["CONTACT"]=data.CONTACT.encode('utf-8')
+                user["USEREMAIL"]=data.USEREMAIL.encode('utf-8')
+                user["DATE"]=data.DATE.encode('utf-8')
+            return render(request, 'cuNeedBlood.html', {"data":user})
+    elif request.method == 'POST':
+        LOOKUP_KEY = login_info[0].encode("utf-8")
+        ZIP = request.POST['pin']
+        ADDRESS = request.POST['street']
+        CITY = request.POST['city']
+        STATE = request.POST['state']
+        COUNTRY = request.POST['country']
+        BLOOD_GP = request.POST['bloodgroup']
+        USERNAME = request.POST['usercontact']
+        CONTACT = request.POST['contactno']       
+        USEREMAIL = request.POST['emailid']
+        DATE = request.POST['date']       
+        LONGITUDE, LATITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())      
+        if(BLOOD_GP[-1] == '+'):
+            BLOOD_GP = BLOOD_GP[0:-1]+ 'Positive'
+        else:
+            BLOOD_GP = BLOOD_GP[0:-1]+ 'Negative'
+        enterUserNeedBloodDetails(LOOKUP_KEY, ZIP,ADDRESS,CITY,STATE,COUNTRY,BLOOD_GP,USERNAME,CONTACT,USEREMAIL,DATE,LONGITUDE,LATITUDE)
+        rows = fetchHospitalsWithSameBG(BLOOD_GP)
+        output = {}
+        i=0
+        for value in rows:
+            distance = getDistanceBetweenTwoPoints.distance(float(LATITUDE), float(LONGITUDE), float(value.LATITUDE), float(value.LONGITUDE))
+            if (distance <=40):
+                output[i]= {'HOSPITAL_NAME':value.HOSPITAL_NAME, 'ADDRESS':value.ADDRESS, 'CITY':value.CITY, 'STATE':value.STATE,'COUNTRY':value.COUNTRY, 'CONTACT_NO':value.CONTACT_NO, 'EMAIL':value.EMAIL, 'DISTANCE':distance}
+                i+=1
+        print output
+        sorted_output = {}
+        i = 0
+        for s in sorted(output.iteritems(), key=lambda (x, y): y['DISTANCE']):
+            sorted_output[i] = s[1]
+            i+=1
+        if(output):
+            return HttpResponse(str(json.dumps({'message':'success', 'data':sorted_output})))
+        else:
+            return HttpResponse(str(json.dumps({'message':'No hospital have this blood group available!'})))
+       
 def cuVolunteer(request):
-    return render(request, 'cuVolunteer.html', {})      
+    login_info = request.session.get('username', 'guest')
+    if request.method == 'GET':
+        if(login_info[0].encode("utf-8")==""):
+            return render(request, 'cuVolunteer.html', {})
+        else:
+            user = OrderedDict() 
+            user["USERNAME"]=login_info[1].encode("utf-8")
+            user["USEREMAIL"]=login_info[0].encode("utf-8")
+            print user
+            return render(request, 'cuVolunteer.html', {"data":user})
+    elif request.method == 'POST':
+        return render(request, 'cuVolunteer.html', {})    
 
 def reset_password(request, id, otp):
     user = {}
@@ -109,6 +197,7 @@ def cuDashboard(request):
                 user["STATE"]=rows.STATE.encode("utf-8")
                 user["COUNTRY"]=rows.COUNTRY.encode("utf-8")
                 user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
+            print user
             return render(request, 'cuDashboard.html', {"data":user})
     elif request.method == 'POST':
         rows = GetUserDetails(login_info[0])

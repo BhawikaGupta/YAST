@@ -416,9 +416,14 @@
                     }
                   
                 }
-                else
+                else if(data["status"] == "ZERO_RESULTS")
                 {
                     bootbox.alert("Enter Correct Pin");
+                    
+                }
+                else
+                {               
+                    bootbox.alert("Slow Network. Please try hitting lookup again");
                 }
             },
             error: function(error) {
@@ -448,7 +453,7 @@
         var country = document.getElementById("country").value;
         var dbf = document.getElementById("dbf").value;
 
-        if(/^[a-zA-z\s]+$/.test(name)==false)
+        /*if(/^[a-zA-z\s]+$/.test(name)==false)
         {
            bootbox.alert("Enter name in correct format");
         }
@@ -468,15 +473,19 @@
         {
            bootbox.alert("Enter zip in correct format");
         }
-        else if(/^[a-zA-z\s]+$/.test(city)==false)
+        else if(/^[a-zA-z0-9\s]+$/.test(address)==false)
+        {
+           bootbox.alert("Enter address in correct format");
+        }
+        else if(/^[a-zA-z0-9\s]+$/.test(city)==false)
         {
            bootbox.alert("Enter city in correct format");
         }
-        else if(/^[a-zA-z\s]+$/.test(state)==false)
+        else if(/^[a-zA-z0-9\s]+$/.test(state)==false)
         {
            bootbox.alert("Enter state in correct format");
-        }
-        else if(/^[a-zA-z\s]+$/.test(country)==false)
+        }*/
+        if(/^[a-zA-z0-9\s]+$/.test(country)==false)
         {
            bootbox.alert("Enter country in correct format");
         }
@@ -508,6 +517,7 @@
         }
 	});
 	$('#submitBtn').click(function(){
+
         var name = document.getElementById("user-name").value;
         var email = document.getElementById("email-id").value;
         var phone = document.getElementById("contact-no").value;
@@ -540,15 +550,19 @@
         {
            bootbox.alert("Enter zip in correct format");
         }
-        else if(/^[a-zA-z\s]+$/.test(city)==false)
+        else if(/^[a-zA-z0-9\s]+$/.test(address)==false)
+        {
+           bootbox.alert("Enter address in correct format");
+        }
+        else if(/^[a-zA-z0-9\s]+$/.test(city)==false)
         {
            bootbox.alert("Enter city in correct format");
         }
-        else if(/^[a-zA-z\s]+$/.test(state)==false)
+        else if(/^[a-zA-z0-9\s]+$/.test(state)==false)
         {
            bootbox.alert("Enter state in correct format");
         }
-        else if(/^[a-zA-z\s]+$/.test(country)==false)
+        else if(/^[a-zA-z0-9\s]+$/.test(country)==false)
         {
            bootbox.alert("Enter country in correct format");
         }

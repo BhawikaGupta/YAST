@@ -1,10 +1,27 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from hospital.models import hospital_info
 from django.db import connection
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from random import randint
+
+class need_blood_user(models.Model):
+    LOOKUP_KEY = models.CharField(max_length = 100)
+    ZIP = models.CharField(max_length = 100)
+    ADDRESS = models.CharField(max_length = 100)
+    CITY = models.CharField(max_length = 100)
+    STATE = models.CharField(max_length = 100)
+    COUNTRY = models.CharField(max_length = 100)
+    BLOOD_GP = models.CharField(max_length = 100)
+    USERNAME = models.CharField(max_length = 100)
+    CONTACT = models.CharField(max_length = 100)
+    USEREMAIL = models.CharField(max_length = 100)
+    DATE = models.CharField(max_length = 100)
+    LONGITUDE = models.CharField(max_length = 100)
+    LATITUDE = models.CharField(max_length = 100)
+    class Meta:
+      db_table = "need_blood_user"
 
 class users_profile(models.Model):
     USEREMAIL = models.CharField(max_length = 100)
@@ -114,5 +131,30 @@ def GetUserDetails(userEmail):
     try:
         user_object = users_profile.objects.get(USEREMAIL=userEmail)
     except users_profile.DoesNotExist:
+        user_object = None
+    return user_object
+
+def fetchHospitalsWithSameBG(BLOOD_GP):
+    try:
+        filter = BLOOD_GP + '__' + 'gte'
+        user_object = hospital_info.objects.filter(**{ filter: 1})
+    except hospital_info.DoesNotExist:
+        user_object = None
+    return user_object
+    
+def enterUserNeedBloodDetails(LOOKUP_KEY, ZIP,ADDRESS,CITY,STATE,COUNTRY,BLOOD_GP,USERNAME,CONTACT,USEREMAIL,DATE,LONGITUDE,LATITUDE):
+    try:
+        obj = need_blood_user.objects.get(LOOKUP_KEY = LOOKUP_KEY)
+        need_blood_user.objects.filter(LOOKUP_KEY = LOOKUP_KEY).delete()
+        obj_entry = need_blood_user(LOOKUP_KEY = LOOKUP_KEY, ZIP=ZIP,ADDRESS=ADDRESS,CITY=CITY,STATE=STATE,COUNTRY=COUNTRY,BLOOD_GP=BLOOD_GP,USERNAME=USERNAME,CONTACT=CONTACT,USEREMAIL=USEREMAIL,DATE=DATE,LONGITUDE=LONGITUDE,LATITUDE=LATITUDE)
+        obj_entry.save()
+    except need_blood_user.DoesNotExist:
+        obj_entry = need_blood_user(LOOKUP_KEY = LOOKUP_KEY, ZIP=ZIP,ADDRESS=ADDRESS,CITY=CITY,STATE=STATE,COUNTRY=COUNTRY,BLOOD_GP=BLOOD_GP,USERNAME=USERNAME,CONTACT=CONTACT,USEREMAIL=USEREMAIL,DATE=DATE,LONGITUDE=LONGITUDE,LATITUDE=LATITUDE)
+        obj_entry.save()
+        
+def getUserNeedBloodDetails(LOOKUP_KEY):
+    try:
+        user_object = need_blood_user.objects.get(LOOKUP_KEY = LOOKUP_KEY)
+    except need_blood_user.DoesNotExist:
         user_object = None
     return user_object
