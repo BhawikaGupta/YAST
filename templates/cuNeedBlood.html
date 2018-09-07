@@ -390,6 +390,7 @@
     <script src="{% static "build/js/custom.min.js" %}" ></script>
     <script src="{% static "js/script.js" %}"></script>
     <script src="{% static "js/bootbox.min.js" %}"></script>
+    <script src="{% static "js/smtp.js" %}"></script>
 <script>
     $(document).ready(function() {
     $(document).ajaxStart(function(){
@@ -578,7 +579,8 @@
         }
         else
         {
-            bootbox.alert("Please dial in " + text + ". Someone from hospital will listen to your query.!");
+            Email.send("youaresomebodytype@gmail.com",text,"Someone Need Blood Urgently!","Hello!! <br><br> A medical emergency has taken place and  {{data.USERNAME}} require {{data.BLOOD_GP}} blood on immediate basis. <br> Please contact on number '{{data.CONTACT}}'.<br> Kindly reply with a confirmation on this mail. <br><br> Best, <br> YAST Team","smtp.gmail.com","youaresomebodytype@gmail.com","YouAreSomebodyType");
+            bootbox.alert("Email Sent. Someone from hospital will contact you soon.!");
         }
     });
   </script>
