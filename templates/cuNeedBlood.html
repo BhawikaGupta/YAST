@@ -543,7 +543,7 @@
                         var yourTableHTML = "";
                         $('#datatable tbody').empty();
                         jQuery.each(obj.data, function(i,data) {
-                            $("#datatable").append("<tr><td>" + data.HOSPITAL_NAME + "</td><td>" + data.ADDRESS + "</td><td>"+data.CITY+"</td><td>"+data.STATE+"</td><td>"+data.COUNTRY+"</td><td>"+data.DISTANCE.toFixed(2)+"</td><td><button class='btn btn-success' style= padding: 1px 6px; type='button' value= {{data.CONTACT}} id = callButton>&nbsp;Call&nbsp;</button>  <button class='btn btn-primary' type='button' style=padding: 1px 6px; value= {{data.USEREMAIL}} id = emailButton>Email</button></td></tr>");
+                            $("#datatable").append("<tr><td>" + data.HOSPITAL_NAME + "</td><td>" + data.ADDRESS + "</td><td>"+data.CITY+"</td><td>"+data.STATE+"</td><td>"+data.COUNTRY+"</td><td>"+data.DISTANCE.toFixed(2)+"</td><td><button class='btn btn-success' style= padding: 1px 6px; type='button' value=" + data.CONTACT_NO +  " id = callButton>&nbsp;Call&nbsp;</button>  <button class='btn btn-primary' type='button' style=padding: 1px 6px; value=" +data.EMAIL +" id = emailButton>Email</button></td></tr>");
                          });
                         window.location.href='#datatable';
                         }
@@ -559,6 +559,28 @@
             });
         }
 	});
+    $(document).on('click', '#callButton', function(){
+        var text = $(this).attr('value');        
+        if(text == "")
+        {
+            bootbox.alert("There is no number available. Sorry!");
+        }
+        else
+        {
+            bootbox.alert("Please dial in " + text + ". Someone from hospital will listen to your query.!");
+        }
+    });
+    $(document).on('click', '#emailButton', function(){
+        var text = $(this).attr('value');        
+        if(text == "")
+        {
+            bootbox.alert("There is no number available. Sorry!");
+        }
+        else
+        {
+            bootbox.alert("Please dial in " + text + ". Someone from hospital will listen to your query.!");
+        }
+    });
   </script>
   </body>
 </html>

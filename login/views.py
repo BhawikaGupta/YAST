@@ -91,7 +91,6 @@ def cuNeedBlood(request):
             if (distance <=40):
                 output[i]= {'HOSPITAL_NAME':value.HOSPITAL_NAME, 'ADDRESS':value.ADDRESS, 'CITY':value.CITY, 'STATE':value.STATE,'COUNTRY':value.COUNTRY, 'CONTACT_NO':value.CONTACT_NO, 'EMAIL':value.EMAIL, 'DISTANCE':distance}
                 i+=1
-        print output
         sorted_output = {}
         i = 0
         for s in sorted(output.iteritems(), key=lambda (x, y): y['DISTANCE']):
