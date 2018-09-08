@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from models import *
 from passlib.hash import sha256_crypt
 import json
+import os
 from django.template import RequestContext
 from collections import OrderedDict
 from django.core.mail import send_mail
@@ -17,11 +18,61 @@ import datetime
 from django.utils import timezone
 from distanceLongitudeLatitude import getLatitudeLongitude, getDistanceBetweenTwoPoints
 from operator import itemgetter
+from django.conf import settings
+
+
+
+path = getattr(settings, "CSV_FOLDER", None) +'CountryToCodeMapping.csv'
+CountryToCodeMappingFile = open(path, "r")
+CountryToCodeMapping = {}
+for rows in CountryToCodeMappingFile:
+    rows = rows[0:-1].decode('UTF-8')
+    fullForm, ShortForm = rows.split("|")
+    CountryToCodeMapping[fullForm] = ShortForm
+ 
    
 
 def homePage(request):
     return render(request, 'homePage.html', {})
     
+def cuVolunteer(request):
+    login_info = request.session.get('username', 'guest')
+    if request.method == 'GET':
+        if(login_info[0].encode("utf-8")==""):
+            return render(request, 'cuVolunteer.html', {})
+        else:
+            user = OrderedDict() 
+            user["USERNAME"]=login_info[1].encode("utf-8")
+            user["USEREMAIL"]=login_info[0].encode("utf-8")
+            user["MESSAGE"]=""
+            user["DATA"]=[]
+            if(user["USEREMAIL"]==""):
+                return render(request, 'cuVolunteer.html', {})  
+            else:
+                output = {}
+                rows = GetUserDetails(user["USEREMAIL"])
+                if(rows):
+                    country_lookup = rows.COUNTRY
+                    if (rows.COUNTRY in CountryToCodeMapping.keys()):
+                        country_lookup = CountryToCodeMapping[rows.COUNTRY].strip()
+                    data_row = getActiveBloodCampaigns(country_lookup)
+                    if(data_row):
+                        for value in data_row:
+                            distance = getDistanceBetweenTwoPoints.distance(float(rows.LATITUDE), float(rows.LONGITUDE), float(value.LATITUDE), float(value.LONGITUDE))
+                            if (distance <=40):
+                                distance = round(distance, 2)
+                                user["DATA"].append({'ADDRESS':value.ADDRESS, 'CITY':value.CITY, 'STATE':value.STATE, 'COUNTRY':value.COUNTRY, 'DATE':value.DATE, 'DISTANCE':distance})
+                        user["MESSAGE"] = "Success"
+                        return render(request, 'cuVolunteer.html', {"data":user})
+                    else:
+                        user["MESSAGE"] = "No campaigns available"
+                    return render(request, 'cuVolunteer.html', {"data":user})
+                else:
+                    user["MESSAGE"] = "Enter details in profile first"
+                    return render(request, 'cuVolunteer.html', {"data":user})
+    elif request.method == 'POST':
+        return render(request, 'cuVolunteer.html', {})    
+        
 def cuNeedBlood(request):
     login_info = request.session.get('username', 'guest')
     if request.method == 'GET':
@@ -77,7 +128,7 @@ def cuNeedBlood(request):
         CONTACT = request.POST['contactno']       
         USEREMAIL = request.POST['emailid']
         DATE = request.POST['date']       
-        LONGITUDE, LATITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())      
+        LATITUDE, LONGITUDE = getLatitudeLongitude.getLatitudeLongitude(ADDRESS.strip() + ", " + CITY.strip() + ", " + STATE.strip() + ", " + COUNTRY.strip())      
         if(BLOOD_GP[-1] == '+'):
             BLOOD_GP = BLOOD_GP[0:-1]+ 'Positive'
         else:
@@ -101,20 +152,6 @@ def cuNeedBlood(request):
         else:
             return HttpResponse(str(json.dumps({'message':'No hospital have this blood group available!'})))
        
-def cuVolunteer(request):
-    login_info = request.session.get('username', 'guest')
-    if request.method == 'GET':
-        if(login_info[0].encode("utf-8")==""):
-            return render(request, 'cuVolunteer.html', {})
-        else:
-            user = OrderedDict() 
-            user["USERNAME"]=login_info[1].encode("utf-8")
-            user["USEREMAIL"]=login_info[0].encode("utf-8")
-            print user
-            return render(request, 'cuVolunteer.html', {"data":user})
-    elif request.method == 'POST':
-        return render(request, 'cuVolunteer.html', {})    
-
 def reset_password(request, id, otp):
     user = {}
     if request.method == 'GET':
@@ -196,7 +233,6 @@ def cuDashboard(request):
                 user["STATE"]=rows.STATE.encode("utf-8")
                 user["COUNTRY"]=rows.COUNTRY.encode("utf-8")
                 user["DONATE_Bf"]=rows.DONATE_Bf.encode("utf-8")
-            print user
             return render(request, 'cuDashboard.html', {"data":user})
     elif request.method == 'POST':
         rows = GetUserDetails(login_info[0])

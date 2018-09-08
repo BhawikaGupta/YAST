@@ -6,6 +6,21 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from random import randint
 
+class active_campaigns(models.Model):
+    CAMPAIGN_ID = models.CharField(primary_key=True,max_length = 100)
+    ZIP = models.CharField(max_length = 100)
+    ADDRESS = models.CharField(max_length = 100)
+    CITY = models.CharField(max_length = 100)
+    STATE = models.CharField(max_length = 100)
+    COUNTRY = models.CharField(max_length = 100)
+    LONGITUDE = models.CharField(max_length = 100)
+    LATITUDE = models.CharField(max_length = 100)
+    CHAIN_ID = models.CharField(max_length = 100)
+    DATE = models.CharField(max_length = 100)
+    SLOTS = models.CharField(max_length = 100)
+    class Meta:
+      db_table = "active_campaigns"
+      
 class need_blood_user(models.Model):
     LOOKUP_KEY = models.CharField(max_length = 100)
     ZIP = models.CharField(max_length = 100)
@@ -141,6 +156,13 @@ def fetchHospitalsWithSameBG(BLOOD_GP):
     except hospital_info.DoesNotExist:
         user_object = None
     return user_object
+    
+def getActiveBloodCampaigns(COUNTRY):
+    try:
+        campaign_object = active_campaigns.objects.filter(COUNTRY=COUNTRY)
+    except active_campaigns.DoesNotExist:
+        campaign_object = None
+    return campaign_object
     
 def enterUserNeedBloodDetails(LOOKUP_KEY, ZIP,ADDRESS,CITY,STATE,COUNTRY,BLOOD_GP,USERNAME,CONTACT,USEREMAIL,DATE,LONGITUDE,LATITUDE):
     try:
