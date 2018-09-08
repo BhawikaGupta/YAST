@@ -19,6 +19,8 @@ from django.utils import timezone
 from distanceLongitudeLatitude import getLatitudeLongitude, getDistanceBetweenTwoPoints
 from operator import itemgetter
 from django.conf import settings
+from datetime import date
+
 
 
 
@@ -55,7 +57,9 @@ def cuVolunteer(request):
                     country_lookup = rows.COUNTRY
                     if (rows.COUNTRY in CountryToCodeMapping.keys()):
                         country_lookup = CountryToCodeMapping[rows.COUNTRY].strip()
-                    data_row = getActiveBloodCampaigns(country_lookup)
+                    today_date = str(date.today())
+                    print(today_date)
+                    data_row = getActiveBloodCampaigns(country_lookup, today_date)
                     if(data_row):
                         for value in data_row:
                             distance = getDistanceBetweenTwoPoints.distance(float(rows.LATITUDE), float(rows.LONGITUDE), float(value.LATITUDE), float(value.LONGITUDE))

@@ -16,7 +16,7 @@ class active_campaigns(models.Model):
     LONGITUDE = models.CharField(max_length = 100)
     LATITUDE = models.CharField(max_length = 100)
     CHAIN_ID = models.CharField(max_length = 100)
-    DATE = models.CharField(max_length = 100)
+    DATE = models.DateField(max_length = 100)
     SLOTS = models.CharField(max_length = 100)
     class Meta:
       db_table = "active_campaigns"
@@ -157,9 +157,9 @@ def fetchHospitalsWithSameBG(BLOOD_GP):
         user_object = None
     return user_object
     
-def getActiveBloodCampaigns(COUNTRY):
+def getActiveBloodCampaigns(COUNTRY, today_date):
     try:
-        campaign_object = active_campaigns.objects.filter(COUNTRY=COUNTRY)
+        campaign_object = active_campaigns.objects.filter(COUNTRY=COUNTRY, DATE__gte=today_date)
     except active_campaigns.DoesNotExist:
         campaign_object = None
     return campaign_object
