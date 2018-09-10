@@ -2,16 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  
-    
-  
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	  
-    <title>YAST | DONORS</title>
+    <title>YAST | REWARD</title>
 
     <!-- Bootstrap -->
     <link href="{% static "vendors/bootstrap/dist/css/bootstrap.min.css" %}"  rel="stylesheet" />
@@ -65,22 +63,21 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <ul class="nav side-menu" style="font-size:13px;">
-                  <li><a href="../dashboard/"><i class="fa fa-edit"></i> Dashboard</a>
+                  <li><a href = "../dashboard/"><i class="fa fa-edit"></i> Dashboard</a>
                   </li>
                   <hr color="white" width="80%">
-                  <li class="active"><a href="../topDonors/"><i class="fa fa-desktop"></i>Potential Donors</a>
+                  <li><a href = "../topDonors/"><i class="fa fa-desktop"></i>Potential Donors</a>
                   </li>
                   <hr color="white" width="80%">
                   <li><a href = "../bloodMonitor/"><i class="fa fa-table"></i>Blood Bank Monitor  </a>
                   </li>
                   <hr color="white" width="80%">
-                  <li><a href = "../network/"><i class="fa fa-edit"></i>Network Graphs</a>
+                  <li><a = "../network/"><i class="fa fa-edit"></i>Network Graphs</a>
                   </li>
                   <hr color="white" width="80%">
-                  <li><a href = "../reward/"><i class="fa fa-desktop"></i>Reward</a>
+                  <li class="active"><a href = "../reward/"><i class="fa fa-desktop"></i>Reward</a>
                   </li>
                   <hr color="white" width="80%">
-
 
                 </ul>
               </div>
@@ -153,7 +150,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Potential Donors</h3>
+                <h3>Rewarded Donors</h3>
               </div>
 
             </div>
@@ -162,7 +159,7 @@
                              <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Likelihood Donation Score & Rank </h2>
+                    <h2>Top 5 Donors</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -177,7 +174,7 @@
                   <div class="x_content">
  
 					
-                    <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                       <thead>
                         <tr>
                           <th>ID</th>
@@ -185,24 +182,20 @@
                           <th>Blood Group</th>
                           <th>CITY | COUNTRY</th>
                           <th>Age</th>
-                          <th>Score</th>
-                          <th>Rank</th>
-                          <th>Donation Status</th>
-                          <th>Reach Out</th>
+                          <th>Total Donations</th>
+                          <th>Send Vouchers</th>
                         </tr>
                       </thead>
                       <tbody>
-                      {% for donor_predict in data %}
+                      {% for donor in data %}
                         <tr>
-                          <td>{{donor_predict.OP_ID}}</td>
-                          <td>{{donor_predict.GENDER}}</td>
-                          <td>{{donor_predict.BLOOD_GROUP}}</td>
-                          <td>{{donor_predict.CITY}} | {{donor_predict.COUNTRY}}</td>
-                          <td>{{donor_predict.AGE}}</td>
-                          <td>{{donor_predict.NET_SCORE}}</td>
-                          <td>{{donor_predict.NET_RANK}}</td>
-                          <td>{{donor_predict.TARGET_STATUS}}</td>
-                          <td><button value='{{donor_predict.EMAIL}}|{{donor_predict.BLOOD_GROUP}}' class="btn btn-primary" type="reset" style="padding: 1px 6px;">Email Donor</button></td>
+                          <td>{{donor.OP_ID}}</td>
+                          <td>{{donor.GENDER}}</td>
+                          <td>{{donor.BLOOD_GROUP}}</td>
+                          <td>{{donor.CITY}} | {{donor.COUNTRY}}</td>
+                          <td>{{donor.AGE}}</td>
+                          <td>{{donor.TOTAL_HISTORICAL_DON}}</td>
+                          <td><button value='{{donor.EMAIL}}|{{donor.BLOOD_GROUP}}' class="btn btn-primary" type="reset" style="padding: 1px 6px;">Email Donor</button></td>
 
                         </tr>
                       {% endfor %}
@@ -223,8 +216,7 @@
             </div>
 
 
-            </div>
-            </div>
+            
           </div>
         </div>
         <!-- /page content -->
@@ -242,9 +234,6 @@
 
     <!-- jQuery -->
     <script src="{% static "vendors/jquery/dist/jquery.min.js" %}" ></script>
-    <!-- High Charts -->
-    <script src="{% static "js/highcharts.js" %}" ></script>
-    <script src="{% static "js/highcharts-3d.js" %}" ></script>
     <!-- Bootstrap -->
     <script src="{% static "vendors/bootstrap/dist/js/bootstrap.min.js" %}" ></script>
     <!-- FastClick -->
@@ -314,7 +303,7 @@
                 success: function(response){
                 
 
-                                        bootbox.alert("done");
+                                        bootbox.alert("Email has been sent!!!");
                         },
                 error: function(error) {
                     bootbox.alert("Server is not responding. Try again later!");
@@ -330,188 +319,7 @@
         
     });
     
-    
-    $(function () { 
-    var data_val = {{ data_json | safe }}
-    console.log(data_val.length)
-    var APosCount = 0;
-    var BPosCount = 0;
-    var OPosCount = 0;
-    var ABPosCount = 0;
-    var ANegCount = 0;
-    var ABNegCount = 0;
-    var ONegCount = 0;
-    var BNegCount = 0;    
 
-    var age15_30 = 0;
-    var age30_50 = 0;
-    var age50_70 = 0;
-    var age_71 = 0; 
-
-    
-    var len = data_val.length
-    
-    var Male = 0
-    var Female = 0
-    
-    var Grad = 0
-    var UnderGrad = 0    
-    
-    $.each(data_val, function( index, value ) {
-        //Gender
-        if (data_val[index].fields.GENDER == "M"){
-            Male++;
-        }
-        else {
-            Female++;
-        }
-        
-        if (data_val[index].fields.EDU_LEVEL == "U"){
-            UnderGrad++;
-        }
-        else {
-            Grad++;
-        }        
-    
-        //Blood Segg.
-        if (data_val[index].fields.BLOOD_GROUP == "A+"){
-            APosCount++;
-        }
-        else if(data_val[index].fields.BLOOD_GROUP == "B+"){
-            BPosCount++;
-        }
-        else if(data_val[index].fields.BLOOD_GROUP == "O+"){
-            OPosCount++;
-        }
-        else if(data_val[index].fields.BLOOD_GROUP == "AB+"){
-            ABPosCount++;
-        }
-        else if (data_val[index].fields.BLOOD_GROUP == "A-"){
-            ANegCount++;
-        }
-        else if(data_val[index].fields.BLOOD_GROUP == "B-"){
-            BNegCount++;
-        }
-        else if(data_val[index].fields.BLOOD_GROUP == "O-"){
-            ONegCount++;
-        }
-        else if(data_val[index].fields.BLOOD_GROUP == "AB-"){
-            ABNegCount++;
-        }
-
-        if (parseInt(data_val[index].fields.AGE) >=15 && parseInt(data_val[index].fields.AGE) <=30){
-            age15_30++;
-        }
-        else if(parseInt(data_val[index].fields.AGE) > 30 && parseInt(data_val[index].fields.AGE) <=50){
-            age30_50++;
-        }
-        else if(parseInt(data_val[index].fields.AGE) > 50 && parseInt(data_val[index].fields.AGE) <=70){
-            age50_70++;
-        }
-        else if(parseInt(data_val[index].fields.AGE) > 70){
-            age_71++;
-        }
-        
-    });
-    
-    
-    var myChart = Highcharts.chart('container', {
-        chart: {
-                    renderTo: 'container',
-                    type: 'column',
-                    options3d: {
-                        enabled: true,
-                        alpha: 15,
-                        beta: 15,
-                        depth: 50,
-                        viewDistance: 25
-            }
-        },
-        title: {
-            text: 'Blood Group Segregation'
-        },
-        xAxis: {
-            categories: ['A+', 'A-', 'B+', 'B-','O+','O-','AB+','AB-']
-        },
-        yAxis: {
-            title: {
-                text: 'Donor Numbers:'+ len
-             }
-        },
-        series: [{
-            name: 'Donor Blood Pool',
-            data: [APosCount, ANegCount, BPosCount , BNegCount ,OPosCount, ONegCount , ABPosCount , ABNegCount ]
-        }]
-    });
-    
-
-    
-    
-    $('#container2').highcharts({
-        chart: {
-            type: 'pie',
-            options3d: {
-				enabled: true,
-                alpha: 45,
-                beta: 0,
-            }
-        },
-        title: {
-            text: 'Age Wise Donor Distribution'
-        },
-        xAxis: {
-            categories: ['A+', 'A-', 'B+', 'B-']
-        },
-        plotOptions: {
-            pie: {
-                depth: 25
-            }
-        },
-        series: [{
-            name: 'Age Range',
-            data: [{name:'Age 15-30', y: age15_30}, {name:'Age 31-50', y:age30_50}, {name:'Age 51-70', y:age50_70}, {name:'Age 71+', y:age_71}]
-        }]
-    });
-    
-    
-       $('#container3').highcharts({
-        chart: {
-            type: 'column',
-            margin: 75,
-            options3d: {
-				enabled: true,
-                alpha: 15,
-                beta: 15,
-                depth: 110
-            }
-        },
-        plotOptions: {
-            column: {
-                depth: 40,
-                stacking: true,
-                grouping: false,
-                groupZPadding: 10
-            }
-        },
-        title: {
-            text: 'Gender and Higher Education Analysis'
-        },
-
-        series: [{
-            data: [Male,Female],
-            stack: 0,
-            name: "Male/Female"
-        }, {
-            data: [UnderGrad,Grad],
-            stack: 1,
-            name: "UnderGrad/Grad"
-        }]
-    });
-
-    
-    
-    
-});
 
  
     </script>
