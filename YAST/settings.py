@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import datetime 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'login',
     'hospital',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -151,3 +153,11 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 # GOOGLE_API Key #
 API_KEY = "AIzaSyByHNzULe2W4eE2LAVH1NiA-NtInV-5EoQ"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', )
+}

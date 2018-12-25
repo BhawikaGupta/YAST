@@ -33,6 +33,22 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework import permissions
+from django.contrib.auth import authenticate, login
+from rest_framework_jwt.settings import api_settings
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK
+)
+
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 path = getattr(settings, "CSV_FOLDER", None) +'CountryToCodeMapping.csv'
 CountryToCodeMappingFile = open(path, "r")
@@ -42,6 +58,24 @@ for rows in CountryToCodeMappingFile:
     fullForm, ShortForm = rows.split("|")
     CountryToCodeMapping[fullForm] = ShortForm
     
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def loginTokenGeneration(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if username is None or password is None:
+        return Response({'error': 'Please provide both username and password'},
+                        status=HTTP_400_BAD_REQUEST)
+    user = authenticate(username=username, password=password)
+    if not user:
+        return Response({'error': 'Invalid Credentials'},
+                        status=HTTP_404_NOT_FOUND)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key},
+                    status=HTTP_200_OK)
+    
+
 @csrf_exempt
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -57,7 +91,7 @@ def user_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
-class UserBloodList(APIView):
+class UserBloodList(APIView):    
     def get(self, request, blood_group, format=None):
         print blood_group
         if(blood_group not in ['O+', 'B+', 'A+', 'AB+', 'O-', 'B-', 'A-', 'AB-']):
