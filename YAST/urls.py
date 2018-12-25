@@ -20,6 +20,7 @@ from login.views import *
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^user/', include('login.urls')),
     url(r'^login/', login, name = 'login'),
     url(r'^signup/', signup, name = 'signup'),
     url(r'^cuDashboard/', cuDashboard, name = 'cuDashboard'),

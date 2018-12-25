@@ -20,9 +20,19 @@ from distanceLongitudeLatitude import getLatitudeLongitude, getDistanceBetweenTw
 from operator import itemgetter
 from django.conf import settings
 from datetime import date
-
-
-
+from .serializers import *
+from .models import *
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework import mixins
+from rest_framework import generics
 
 path = getattr(settings, "CSV_FOLDER", None) +'CountryToCodeMapping.csv'
 CountryToCodeMappingFile = open(path, "r")
@@ -31,8 +41,94 @@ for rows in CountryToCodeMappingFile:
     rows = rows[0:-1].decode('UTF-8')
     fullForm, ShortForm = rows.split("|")
     CountryToCodeMapping[fullForm] = ShortForm
- 
+    
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def user_list(request):
+    if request.method == 'GET':
+        snippets = users_profile.objects.all()
+        serializer = UserSerializer(snippets, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
+
+class UserBloodList(APIView):
+    def get(self, request, blood_group, format=None):
+        print blood_group
+        if(blood_group not in ['O+', 'B+', 'A+', 'AB+', 'O-', 'B-', 'A-', 'AB-']):
+            return Response(data={"message": "Invalid Blood Group"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            queryset = users_profile.objects.filter(BLOOD_GP=blood_group)
+            serializer = UserSerializer(queryset, many=True)
+            return Response(serializer.data)
+            
+           
+class CreateCampaignView(generics.ListCreateAPIView):
+    queryset = active_campaigns.objects.all()
+    global len_set
+    len_set = len(queryset)+1
+    serializer_class = ActiveCampaigns    
+    
+    def post(self, request, *args, **kwargs):
+        LATITUDE, LONGITUDE = getLatitudeLongitude.getLatitudeLongitude(request.data["ADDRESS"].strip() + ", " + request.data["CITY"].strip() + ", " + request.data["STATE"].strip() + ", " + request.data["COUNTRY"].strip())
+        print request.data
+        mutable = request.data._mutable
+        request.data._mutable = True
+        request.data["CAMPAIGN_ID"] = "C"+str(len_set)
+        request.data["LATITUDE"] = LATITUDE
+        request.data["LONGITUDE"] = LONGITUDE
+        request.data._mutable = mutable
+        print request.data
+        serializer = ActiveCampaigns(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
    
+    def put(self, request, *args, **kwargs):
+        try:
+            campaign = self.queryset.get(CAMPAIGN_ID=kwargs["id"])
+            serializer = ActiveCampaigns(instance=campaign, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except active_campaigns.DoesNotExist:
+            return Response(
+                data={
+                    "message": "Campaign with id: {} does not exist".format(kwargs["id"])
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+    
+    
+class UserList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = users_profile.objects.all()
+    serializer_class = UserSerializer
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+        
+    '''/*def get(self, request, format=None):
+        snippets = users_profile.objects.all()
+        serializer = UserSerializer(snippets, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,  status=status.HTTP_400_BAD_REQUEST)*/'''
+
 
 def homePage(request):
     return render(request, 'homePage.html', {})
